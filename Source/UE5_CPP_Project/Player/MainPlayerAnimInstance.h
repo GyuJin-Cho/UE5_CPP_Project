@@ -21,6 +21,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		bool Sprint;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		bool Aim;
 public:
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;

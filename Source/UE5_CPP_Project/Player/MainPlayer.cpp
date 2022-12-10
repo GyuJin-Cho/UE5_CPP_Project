@@ -1,10 +1,13 @@
 #include "Player/MainPlayer.h"
 #include "Global.h"
+#include "Widgets/CrossHair.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraComponent.h"
+
 AMainPlayer::AMainPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -31,12 +34,21 @@ AMainPlayer::AMainPlayer()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
+
+	//Widgets
+	CHelpers::GetClass<UCrossHair>(&CrossHairWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/CrossHair.CrossHair_C'");
 }
 
 void AMainPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if(CrossHairWidgetClass)
+	{
+		CrossHairWidgets = CreateWidget<UCrossHair>(GetWorld(), CrossHairWidgetClass);
+		CrossHairWidgets->AddToViewport();
+		CrossHairWidgets->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void AMainPlayer::Tick(float DeltaTime)
@@ -59,6 +71,8 @@ void AMainPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &AMainPlayer::JumpEnd);
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &AMainPlayer::Sprint);
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &AMainPlayer::SprintEnd);
+	PlayerInputComponent->BindAction("Aim", EInputEvent::IE_Pressed, this, &AMainPlayer::Aim);
+	PlayerInputComponent->BindAction("Aim", EInputEvent::IE_Released, this, &AMainPlayer::AimEnd);
 }
 
 void AMainPlayer::OnMoveForward(float InAxis)
@@ -113,5 +127,23 @@ void AMainPlayer::SprintEnd()
 {
 	IsSprint = false;
 	GetCharacterMovement()->MaxWalkSpeed = 400;
+}
+
+void AMainPlayer::Aim()
+{
+	CrossHairWidgets->SetVisibility(ESlateVisibility::Visible);
+	IsAim = true;
+	SpringArm->SetRelativeLocation(FVector(-80, 0, 140));
+	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
+	SpringArm->TargetArmLength = 100.0f;
+}
+
+void AMainPlayer::AimEnd()
+{
+	CrossHairWidgets->SetVisibility(ESlateVisibility::Hidden);
+	IsAim = false;
+	SpringArm->SetRelativeLocation(FVector(0, 0, 140));
+	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
+	SpringArm->TargetArmLength = 300.0f;
 }
 

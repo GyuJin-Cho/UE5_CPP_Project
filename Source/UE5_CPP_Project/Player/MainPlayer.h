@@ -10,6 +10,7 @@ class UE5_CPP_PROJECT_API AMainPlayer : public ACharacter
 	GENERATED_BODY()
 public:
 	bool IsSprint;
+	bool IsAim;
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -18,6 +19,11 @@ private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCameraComponent* Camera;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+		TSubclassOf<class UCrossHair> CrossHairWidgetClass;
+
+	class UCrossHair* CrossHairWidgets;
+	
 
 public:
 	AMainPlayer();
@@ -33,6 +39,7 @@ public:
 
 public:
 	FORCEINLINE bool GetSprint() { return IsSprint; }
+	FORCEINLINE bool GetAim() { return IsAim; }
 private:
 	void OnMoveForward(float InAxis);
 	void OnMoveRight(float InAxis);
@@ -42,6 +49,8 @@ private:
 	void JumpEnd();
 	void Sprint();
 	void SprintEnd();
+	void Aim();
+	void AimEnd();
 
 
 };
