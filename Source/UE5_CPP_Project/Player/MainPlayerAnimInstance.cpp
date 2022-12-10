@@ -26,5 +26,4 @@ void UMainPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	Player = Cast<AMainPlayer>(character);
 	Falling = Player->GetCharacterMovement()->IsFalling();
 	Sprint = Player->GetSprint();
-	CLog::Print(Sprint);
 }
