@@ -23,7 +23,11 @@ private:
 		TSubclassOf<class UCrossHair> CrossHairWidgetClass;
 
 	class UCrossHair* CrossHairWidgets;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+		TSubclassOf<class AM4Weapon> M4Weapon;
+
+	class AM4Weapon* M4WeaponActor;
 
 public:
 	AMainPlayer();
@@ -36,10 +40,15 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//ActorComponents
+private:
+	UPROPERTY(VisibleDefaultsOnly)
+		class UStatusComponent* Status;
 
 public:
 	FORCEINLINE bool GetSprint() { return IsSprint; }
 	FORCEINLINE bool GetAim() { return IsAim; }
+	FORCEINLINE UStatusComponent* GetStatus() { return Status; }
 private:
 	void OnMoveForward(float InAxis);
 	void OnMoveRight(float InAxis);
@@ -51,6 +60,7 @@ private:
 	void SprintEnd();
 	void Aim();
 	void AimEnd();
+	void Equip();
 
 
 };

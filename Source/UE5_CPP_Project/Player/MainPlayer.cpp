@@ -7,6 +7,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraComponent.h"
+#include "Engine/SkeletalMeshSocket.h"
+#include "Weapon/M4Weapon.h"
+#include "Components/StatusComponent.h"
 
 AMainPlayer::AMainPlayer()
 {
@@ -14,6 +17,7 @@ AMainPlayer::AMainPlayer()
 
 	CHelpers::CreateComponent(this, &SpringArm, "SpringArm", GetMesh());
 	CHelpers::CreateComponent(this, &Camera, "Camera", SpringArm);
+	CHelpers::CreateActorComponent(this, &Status, "Status");
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -88));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -43,12 +47,23 @@ void AMainPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
+
 	if(CrossHairWidgetClass)
 	{
 		CrossHairWidgets = CreateWidget<UCrossHair>(GetWorld(), CrossHairWidgetClass);
 		CrossHairWidgets->AddToViewport();
 		CrossHairWidgets->SetVisibility(ESlateVisibility::Hidden);
 	}
+
+	if(M4Weapon)
+	{
+		FActorSpawnParameters SpawnParameters;
+		AActor* SpawnActor = GetWorld()->SpawnActor<AActor>(M4Weapon,FVector(0.f,0.f,0.f),FRotator(0.f,0.f,0.f), SpawnParameters);
+		M4WeaponActor = Cast<AM4Weapon>(SpawnActor);
+	}
+
+	Equip();
+	
 }
 
 void AMainPlayer::Tick(float DeltaTime)
@@ -119,14 +134,21 @@ void AMainPlayer::JumpEnd()
 
 void AMainPlayer::Sprint()
 {
-	IsSprint = true;
-	GetCharacterMovement()->MaxWalkSpeed = 600;
+	if(Status->CanMove())
+	{
+		IsSprint = true;
+		Status->SetSpeed(ECharacterSpeed::Sprint);
+	}
+	
 }
 
 void AMainPlayer::SprintEnd()
 {
-	IsSprint = false;
-	GetCharacterMovement()->MaxWalkSpeed = 400;
+	if (Status->CanMove())
+	{
+		IsSprint = false;
+		Status->SetSpeed(ECharacterSpeed::Run);
+	}
 }
 
 void AMainPlayer::Aim()
@@ -146,4 +168,25 @@ void AMainPlayer::AimEnd()
 	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
 	SpringArm->TargetArmLength = 300.0f;
 }
+
+void AMainPlayer::Equip()
+{
+	if (M4WeaponActor)
+	{
+
+		M4WeaponActor->GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+		GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+		
+		GetMesh()->SetSimulatePhysics(false);
+
+		const USkeletalMeshSocket* RighthandSocket = GetMesh()->GetSocketByName("WeaponSocket");
+
+		if (RighthandSocket)
+		{
+			RighthandSocket->AttachActor(M4WeaponActor,GetMesh());
+		}
+	}
+}
+
+
 
