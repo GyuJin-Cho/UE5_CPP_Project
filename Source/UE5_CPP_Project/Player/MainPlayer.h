@@ -24,11 +24,19 @@ private:
 
 	class UCrossHair* CrossHairWidgets;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+		TSubclassOf<class UMainHudWidget> MainHudWidgetClass;
+
+	class UMainHudWidget* MainHudWidget;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 		TSubclassOf<class AM4Weapon> M4Weapon;
 
 	class AM4Weapon* M4WeaponActor;
 
+private:
+	float AimTargetLength=100.0f;
+	float NotAimTargetLength = 300.0f;
 public:
 	AMainPlayer();
 

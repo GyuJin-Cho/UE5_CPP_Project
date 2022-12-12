@@ -3,13 +3,13 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/MainPlayer.h"
-
+#include "Kismet/KismetMathLibrary.h"
+#include "Math/UnrealMathUtility.h"
 
 void UMainPlayerAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
 
-	
 }
 
 void UMainPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -27,4 +27,13 @@ void UMainPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	Falling = Player->GetCharacterMovement()->IsFalling();
 	Sprint = Player->GetSprint();
 	Aim = Player->GetAim();
+
+	FRotator Delta = UKismetMathLibrary::NormalizedDeltaRotator(Player->GetControlRotation(), Player->GetActorRotation());
+	FRotator Interp = FMath::RInterpTo(FRotator(Pitch, Yaw, 0.0f), Delta, GetDeltaSeconds(), 5.0f);
+	
+	float PitchAngle = Interp.Pitch;
+	float YawAngle = Interp.Yaw;
+	Pitch = FMath::ClampAngle(PitchAngle,-90.f,90.f);
+	Yaw = FMath::ClampAngle(YawAngle,-90.f,90.f);
+
 }

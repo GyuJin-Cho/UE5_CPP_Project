@@ -1,6 +1,7 @@
 #include "Player/MainPlayer.h"
 #include "Global.h"
 #include "Widgets/CrossHair.h"
+#include "Widgets/MainHudWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -10,6 +11,7 @@
 #include "Engine/SkeletalMeshSocket.h"
 #include "Weapon/M4Weapon.h"
 #include "Components/StatusComponent.h"
+#include "Math/UnrealMathUtility.h"
 
 AMainPlayer::AMainPlayer()
 {
@@ -41,6 +43,7 @@ AMainPlayer::AMainPlayer()
 
 	//Widgets
 	CHelpers::GetClass<UCrossHair>(&CrossHairWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/CrossHair.CrossHair_C'");
+	CHelpers::GetClass<UMainHudWidget>(&MainHudWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/MainHudWidget.MainHudWidget_C'");
 }
 
 void AMainPlayer::BeginPlay()
@@ -53,6 +56,12 @@ void AMainPlayer::BeginPlay()
 		CrossHairWidgets = CreateWidget<UCrossHair>(GetWorld(), CrossHairWidgetClass);
 		CrossHairWidgets->AddToViewport();
 		CrossHairWidgets->SetVisibility(ESlateVisibility::Hidden);
+	}
+
+	if(MainHudWidgetClass)
+	{
+		MainHudWidget = CreateWidget<UMainHudWidget>(GetWorld(), MainHudWidgetClass);
+		MainHudWidget->AddToViewport();
 	}
 
 	if(M4Weapon)
@@ -70,6 +79,7 @@ void AMainPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
 }
 
 void AMainPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

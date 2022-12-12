@@ -24,6 +24,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		bool Aim;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		float Pitch;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		float Yaw;
 public:
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
