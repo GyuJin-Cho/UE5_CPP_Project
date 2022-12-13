@@ -18,13 +18,30 @@ private:
 		class USkeletalMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere)
-		class UBoxComponent* Box;
+		class USphereComponent* Muzzle;
 
+	UPROPERTY(EditAnywhere)
+		class UParticleSystemComponent* ShellEject;
+
+	UPROPERTY(EditAnywhere)
+		class UParticleSystem* Particle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+		TSubclassOf<class AM4Projectile> ProjectileActorClass;
+
+	class AM4Projectile* ProjectileActor;
+
+private:
+	UPROPERTY(EditAnywhere)
+		class UAnimationAsset* FireAnimation;
 protected:
 	virtual void BeginPlay() override;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
+
+public:
+	void Fire(class AMainPlayer* Player);
 
 public:
 	FORCEINLINE USkeletalMeshComponent* GetMesh() { return Mesh; }

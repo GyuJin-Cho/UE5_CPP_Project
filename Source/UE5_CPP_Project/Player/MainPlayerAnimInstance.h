@@ -26,6 +26,8 @@ protected:
 		bool Aim;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		bool Fire;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		float Pitch;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)

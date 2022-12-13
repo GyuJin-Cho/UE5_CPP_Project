@@ -11,6 +11,7 @@
 #include "Engine/SkeletalMeshSocket.h"
 #include "Weapon/M4Weapon.h"
 #include "Components/StatusComponent.h"
+#include "Components/StateComponent.h"
 #include "Math/UnrealMathUtility.h"
 
 AMainPlayer::AMainPlayer()
@@ -20,6 +21,7 @@ AMainPlayer::AMainPlayer()
 	CHelpers::CreateComponent(this, &SpringArm, "SpringArm", GetMesh());
 	CHelpers::CreateComponent(this, &Camera, "Camera", SpringArm);
 	CHelpers::CreateActorComponent(this, &Status, "Status");
+	CHelpers::CreateActorComponent(this, &State, "State");
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -88));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
@@ -44,6 +46,9 @@ AMainPlayer::AMainPlayer()
 	//Widgets
 	CHelpers::GetClass<UCrossHair>(&CrossHairWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/CrossHair.CrossHair_C'");
 	CHelpers::GetClass<UMainHudWidget>(&MainHudWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/MainHudWidget.MainHudWidget_C'");
+
+	//Montage
+	CHelpers::GetAsset<UAnimMontage>(&FireMontage, "AnimMontage'/Game/Player/Animation/Fire/TPP_VG_Fire_Normal_Anim_Montage.TPP_VG_Fire_Normal_Anim_Montage'");
 }
 
 void AMainPlayer::BeginPlay()
@@ -98,6 +103,10 @@ void AMainPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &AMainPlayer::SprintEnd);
 	PlayerInputComponent->BindAction("Aim", EInputEvent::IE_Pressed, this, &AMainPlayer::Aim);
 	PlayerInputComponent->BindAction("Aim", EInputEvent::IE_Released, this, &AMainPlayer::AimEnd);
+	PlayerInputComponent->BindAction("IsAuto", EInputEvent::IE_Pressed, this, &AMainPlayer::Auto);
+	PlayerInputComponent->BindAction("IsAuto", EInputEvent::IE_Released, this, &AMainPlayer::AutoEnd);
+	PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, this, &AMainPlayer::Action);
+	PlayerInputComponent->BindAction("Action", EInputEvent::IE_Released, this, &AMainPlayer::ActionEnd);
 }
 
 void AMainPlayer::OnMoveForward(float InAxis)
@@ -164,19 +173,77 @@ void AMainPlayer::SprintEnd()
 void AMainPlayer::Aim()
 {
 	CrossHairWidgets->SetVisibility(ESlateVisibility::Visible);
+	State->SetAimMode();
 	IsAim = true;
 	SpringArm->SetRelativeLocation(FVector(-80, 0, 140));
 	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
 	SpringArm->TargetArmLength = 100.0f;
+	CLog::Print("Aim");
 }
 
 void AMainPlayer::AimEnd()
 {
 	CrossHairWidgets->SetVisibility(ESlateVisibility::Hidden);
+	State->SetIdleMode();
 	IsAim = false;
 	SpringArm->SetRelativeLocation(FVector(0, 0, 140));
 	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
 	SpringArm->TargetArmLength = 300.0f;
+}
+
+void AMainPlayer::Auto()
+{
+	if(!State->IsFireMode())
+	{
+		if(IsAuto)
+		{
+			IsAuto = false;
+		}
+		else
+		{
+			IsAuto = true;
+		}
+
+	}
+}
+
+void AMainPlayer::AutoEnd()
+{
+}
+
+void AMainPlayer::Action()
+{
+	if(State->IsAimMode())
+	{
+		State->SetFireMode();
+		Fire();
+	}
+}
+
+void AMainPlayer::ActionEnd()
+{
+	if(State->IsFireMode())
+	{
+		State->SetAimMode();
+		if (IsAuto)
+			GetWorldTimerManager().ClearTimer(RifleFireTimer);
+	}
+}
+
+void AMainPlayer::Fire()
+{
+	if(IsAuto)
+	{
+		CLog::Print("Fire");
+		PlayAnimMontage(FireMontage);
+		M4WeaponActor->Fire(this);
+		GetWorld()->GetTimerManager().SetTimer(RifleFireTimer, this, &AMainPlayer::Fire, 0.1f, false);
+	}
+	else
+	{
+		PlayAnimMontage(FireMontage);
+		M4WeaponActor->Fire(this);
+	}
 }
 
 void AMainPlayer::Equip()
