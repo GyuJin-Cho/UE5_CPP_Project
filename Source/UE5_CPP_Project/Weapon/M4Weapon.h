@@ -26,6 +26,9 @@ private:
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* Particle;
 
+	UPROPERTY(EditAnywhere)
+		class UArmoComponent* Armo;
+		
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 		TSubclassOf<class AM4Projectile> ProjectileActorClass;
 

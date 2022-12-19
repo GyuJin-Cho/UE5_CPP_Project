@@ -6,6 +6,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Particles/ParticleSystem.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/ArmoComponent.h"
 #include "Animation/AnimationAsset.h"
 #include "Camera/CameraComponent.h"
 #include "Weapon/M4Projectile.h"
@@ -16,6 +17,7 @@ AM4Weapon::AM4Weapon()
 	CHelpers::CreateComponent(this, &Mesh, "M4", GetRootComponent());
 	CHelpers::CreateComponent(this, &Muzzle, "Muzzle", Mesh);
 	CHelpers::CreateComponent(this, &ShellEject, "ShellEject", Mesh);
+	CHelpers::CreateActorComponent(this, &Armo, "Armo");
 
 	Muzzle->SetRelativeLocation(FVector(0.0f, 55.555556f, 6.896552f));
 	Muzzle->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
