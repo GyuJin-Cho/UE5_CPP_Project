@@ -29,7 +29,7 @@ void UMainPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	Sprint = Player->GetSprint();
 	Aim = Player->GetAim();
 	Fire = Player->GetState()->IsFireMode();
-
+	Reload = Player->GetReload();
 	FRotator Delta = UKismetMathLibrary::NormalizedDeltaRotator(Player->GetControlRotation(), Player->GetActorRotation());
 	FRotator Interp = FMath::RInterpTo(FRotator(Pitch, Yaw, 0.0f), Delta, GetDeltaSeconds(), 5.0f);
 	

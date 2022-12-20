@@ -12,6 +12,7 @@ public:
 	bool IsSprint;
 	bool IsAuto;
 	bool IsAim;
+	bool IsReload;
 	FTimerHandle RifleFireTimer;
 
 	//Components
@@ -44,7 +45,8 @@ private:
 	//Montage
 private:
 	class UAnimMontage* FireMontage;
-
+	class UAnimMontage* ReloadMontage;
+	class UAnimMontage* EmptyFire;
 private:
 	float AimTargetLength=100.0f;
 	float NotAimTargetLength = 300.0f;
@@ -70,6 +72,7 @@ private:
 public:
 	FORCEINLINE bool GetSprint() { return IsSprint; }
 	FORCEINLINE bool GetAim() { return IsAim; }
+	FORCEINLINE bool GetReload() { return IsReload; }
 	FORCEINLINE UStatusComponent* GetStatus() { return Status; }
 	FORCEINLINE UStateComponent* GetState() { return State; }
 	FORCEINLINE UCameraComponent* GetCamera() { return Camera; }
@@ -88,10 +91,15 @@ private:
 	void AutoEnd();
 	void Action();
 	void ActionEnd();
+	void Reload();
 
 	void Fire();
 
 	void Equip();
+
+	// 노티파이 전용
+public:
+	void ReloadAction();
 
 
 };

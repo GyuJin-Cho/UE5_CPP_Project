@@ -45,8 +45,10 @@ public:
 
 public:
 	void Fire(class AMainPlayer* Player);
+	void SetArmo();
 
 public:
 	FORCEINLINE USkeletalMeshComponent* GetMesh() { return Mesh; }
+	FORCEINLINE UArmoComponent* GetArmo() { return Armo; }
 
 };

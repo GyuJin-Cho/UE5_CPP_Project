@@ -14,4 +14,16 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void StaminaUpdate(float InStamina, float InMaxStamina);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void DecreaseArmo(int Armo);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void Reload(int MaxArmo);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void IsAuto(bool IsAuto);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void SetMaxArmo(int MaxArmo);
 };

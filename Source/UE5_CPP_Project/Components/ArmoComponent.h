@@ -10,7 +10,7 @@ class UE5_CPP_PROJECT_API UArmoComponent : public UActorComponent
 	GENERATED_BODY()
 
 private:
-	int Armo;
+	int Armo = 30;
 	int MaxArmo = 30;
 
 public:	

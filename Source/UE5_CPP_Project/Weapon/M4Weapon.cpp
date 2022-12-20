@@ -41,19 +41,30 @@ void AM4Weapon::Tick(float DeltaTime)
 void AM4Weapon::Fire(AMainPlayer* Player)
 {
 	//Mesh->PlayAnimation(FireAnimation,false);
-	ShellEject->Activate(true);
 
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Muzzle->GetComponentLocation(), FRotator(0.0f), FVector(1.3f, 1.3f, 1.3f), false);
-	Mesh->PlayAnimation(FireAnimation, false);
+	if(Armo->GetArmo()!=0)
+	{
+		ShellEject->Activate(true);
 
-	FVector CameraLocation = Player->GetCamera()->GetComponentLocation();
-	FVector StartVector = UKismetMathLibrary::GetForwardVector(Player->GetCamera()->GetComponentRotation());
-	FVector StartLocation = (CameraLocation + (StartLocation * 250.f));
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Muzzle->GetComponentLocation(), FRotator(0.0f), FVector(1.3f, 1.3f, 1.3f), false);
+		Mesh->PlayAnimation(FireAnimation, false);
 
-	FVector ForwardVector = UKismetMathLibrary::GetForwardVector(Player->GetCamera()->GetComponentRotation());
-	FVector EndLocation = (CameraLocation + (ForwardVector * 20000.f));
+		FVector CameraLocation = Player->GetCamera()->GetComponentLocation();
+		FVector StartVector = UKismetMathLibrary::GetForwardVector(Player->GetCamera()->GetComponentRotation());
+		FVector StartLocation = (CameraLocation + (StartLocation * 250.f));
 
-	GetWorld()->SpawnActor<AM4Projectile>(ProjectileActorClass, StartLocation, Player->GetControlRotation());
+		FVector ForwardVector = UKismetMathLibrary::GetForwardVector(Player->GetCamera()->GetComponentRotation());
+		FVector EndLocation = (CameraLocation + (ForwardVector * 20000.f));
+
+		GetWorld()->SpawnActor<AM4Projectile>(ProjectileActorClass, StartLocation, Player->GetControlRotation());
+		Armo->SetArmo(Armo->GetArmo() - 1);
+	}
+	
+}
+
+void AM4Weapon::SetArmo()
+{
+	Armo->SetArmo(Armo->GetMaxArmo());
 }
 
 //void AM4Weapon::Equip(AMainPlayer* Player)

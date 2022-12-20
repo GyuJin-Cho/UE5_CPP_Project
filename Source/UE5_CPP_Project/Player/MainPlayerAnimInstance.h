@@ -27,6 +27,10 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		bool Fire;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		bool Reload;
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		float Pitch;
 

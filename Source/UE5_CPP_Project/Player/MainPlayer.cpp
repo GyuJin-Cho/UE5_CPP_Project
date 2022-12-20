@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraComponent.h"
+#include "Components/ArmoComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Weapon/M4Weapon.h"
 #include "Components/StatusComponent.h"
@@ -49,6 +50,9 @@ AMainPlayer::AMainPlayer()
 
 	//Montage
 	CHelpers::GetAsset<UAnimMontage>(&FireMontage, "AnimMontage'/Game/Player/Animation/Fire/TPP_VG_Fire_Normal_Anim_Montage.TPP_VG_Fire_Normal_Anim_Montage'");
+	CHelpers::GetAsset<UAnimMontage>(&ReloadMontage, "AnimMontage'/Game/Player/Animation/Action/TPP_HG_Reload_30Mag_Anim_Montage.TPP_HG_Reload_30Mag_Anim_Montage'");
+	CHelpers::GetAsset<UAnimMontage>(&EmptyFire, "AnimMontage'/Game/Player/Animation/Fire/TPP_VG_Fire_Empty_Anim_Montage.TPP_VG_Fire_Empty_Anim_Montage'");
+	
 }
 
 void AMainPlayer::BeginPlay()
@@ -74,10 +78,11 @@ void AMainPlayer::BeginPlay()
 		FActorSpawnParameters SpawnParameters;
 		AActor* SpawnActor = GetWorld()->SpawnActor<AActor>(M4Weapon,FVector(0.f,0.f,0.f),FRotator(0.f,0.f,0.f), SpawnParameters);
 		M4WeaponActor = Cast<AM4Weapon>(SpawnActor);
+		MainHudWidget->SetMaxArmo(M4WeaponActor->GetArmo()->GetMaxArmo());
 	}
 
 	Equip();
-	
+	MainHudWidget->IsAuto(IsAuto);
 }
 
 void AMainPlayer::Tick(float DeltaTime)
@@ -107,6 +112,7 @@ void AMainPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("IsAuto", EInputEvent::IE_Released, this, &AMainPlayer::AutoEnd);
 	PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, this, &AMainPlayer::Action);
 	PlayerInputComponent->BindAction("Action", EInputEvent::IE_Released, this, &AMainPlayer::ActionEnd);
+	PlayerInputComponent->BindAction("Reload", EInputEvent::IE_Pressed, this, &AMainPlayer::Reload);
 }
 
 void AMainPlayer::OnMoveForward(float InAxis)
@@ -198,10 +204,12 @@ void AMainPlayer::Auto()
 		if(IsAuto)
 		{
 			IsAuto = false;
+			MainHudWidget->IsAuto(IsAuto);
 		}
 		else
 		{
 			IsAuto = true;
+			MainHudWidget->IsAuto(IsAuto);
 		}
 
 	}
@@ -230,19 +238,48 @@ void AMainPlayer::ActionEnd()
 	}
 }
 
+void AMainPlayer::Reload()
+{
+	if (IsAim)
+		return;
+	if (IsReload)
+		return;
+	if(M4WeaponActor->GetArmo()->GetArmo()!= M4WeaponActor->GetArmo()->GetMaxArmo())
+	{
+		IsReload = true;
+		PlayAnimMontage(ReloadMontage);
+	}
+}
+
+void AMainPlayer::ReloadAction()
+{
+	IsReload = false;
+	MainHudWidget->Reload(M4WeaponActor->GetArmo()->GetMaxArmo());
+	M4WeaponActor->SetArmo();
+}
+
 void AMainPlayer::Fire()
 {
-	if(IsAuto)
+	if (IsReload)
+		return;
+	if(M4WeaponActor->GetArmo()->GetArmo()!=0)
 	{
-		CLog::Print("Fire");
-		PlayAnimMontage(FireMontage);
-		M4WeaponActor->Fire(this);
-		GetWorld()->GetTimerManager().SetTimer(RifleFireTimer, this, &AMainPlayer::Fire, 0.1f, false);
+		if (IsAuto)
+		{
+			PlayAnimMontage(FireMontage);
+			M4WeaponActor->Fire(this);
+			GetWorld()->GetTimerManager().SetTimer(RifleFireTimer, this, &AMainPlayer::Fire, 0.1f, false);
+		}
+		else
+		{
+			PlayAnimMontage(FireMontage);
+			M4WeaponActor->Fire(this);
+		}
+		MainHudWidget->DecreaseArmo(M4WeaponActor->GetArmo()->GetArmo());
 	}
 	else
 	{
-		PlayAnimMontage(FireMontage);
-		M4WeaponActor->Fire(this);
+		PlayAnimMontage(EmptyFire);
 	}
 }
 
