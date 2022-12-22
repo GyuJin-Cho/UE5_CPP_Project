@@ -10,6 +10,7 @@
 #include "Animation/AnimationAsset.h"
 #include "Camera/CameraComponent.h"
 #include "Weapon/M4Projectile.h"
+#include "Engine/World.h"
 AM4Weapon::AM4Weapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -50,13 +51,22 @@ void AM4Weapon::Fire(AMainPlayer* Player)
 		Mesh->PlayAnimation(FireAnimation, false);
 
 		FVector CameraLocation = Player->GetCamera()->GetComponentLocation();
-		FVector StartVector = UKismetMathLibrary::GetForwardVector(Player->GetCamera()->GetComponentRotation());
-		FVector StartLocation = (CameraLocation + (StartLocation * 250.f));
+		FVector CameraForward = Player->GetCamera()->GetForwardVector() * 50000.0f;
+		FTransform CameraWorldTransForm = Player->GetCamera()->GetComponentTransform();
+		FHitResult Result;
+		GetWorld()->SpawnActor<AM4Projectile>(ProjectileActorClass, CameraWorldTransForm);
 
-		FVector ForwardVector = UKismetMathLibrary::GetForwardVector(Player->GetCamera()->GetComponentRotation());
-		FVector EndLocation = (CameraLocation + (ForwardVector * 20000.f));
-
-		GetWorld()->SpawnActor<AM4Projectile>(ProjectileActorClass, StartLocation, Player->GetControlRotation());
+		//if(GetWorld()->LineTraceSingleByChannel(Result, CameraLocation, CameraForward + CameraLocation, ECollisionChannel::ECC_Visibility))
+		//{
+		//	Result
+		//
+		//
+		//}
+		//else
+		//{
+		//	return;
+		//}
+		
 		Armo->SetArmo(Armo->GetArmo() - 1);
 	}
 	

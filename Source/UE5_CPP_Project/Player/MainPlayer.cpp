@@ -59,7 +59,6 @@ void AMainPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-
 	if(CrossHairWidgetClass)
 	{
 		CrossHairWidgets = CreateWidget<UCrossHair>(GetWorld(), CrossHairWidgetClass);
@@ -184,7 +183,7 @@ void AMainPlayer::Aim()
 	SpringArm->SetRelativeLocation(FVector(-80, 0, 140));
 	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
 	SpringArm->TargetArmLength = 100.0f;
-	CLog::Print("Aim");
+	Status->SetSpeed(ECharacterSpeed::Walk);
 }
 
 void AMainPlayer::AimEnd()
@@ -195,6 +194,7 @@ void AMainPlayer::AimEnd()
 	SpringArm->SetRelativeLocation(FVector(0, 0, 140));
 	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
 	SpringArm->TargetArmLength = 300.0f;
+	Status->SetSpeed(ECharacterSpeed::Run);
 }
 
 void AMainPlayer::Auto()

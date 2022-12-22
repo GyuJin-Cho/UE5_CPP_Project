@@ -18,6 +18,10 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USphereComponent* SphereCollision;
