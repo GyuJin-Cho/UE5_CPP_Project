@@ -2,7 +2,10 @@
 #include "Global.h"
 #include "Components/CapsuleComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Engine/SkeletalMesh.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Particles/ParticleSystem.h"
 
 ABaseZombie::ABaseZombie()
 {
@@ -11,13 +14,11 @@ ABaseZombie::ABaseZombie()
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -88));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 
-	USkeletalMesh* mesh;
-	CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/EnemyZombie/ZombieBase/Mesh/BaseZombieA01.BaseZombieA01'");
-	GetMesh()->SetSkeletalMesh(mesh);
+	CHelpers::GetAsset<USkeletalMesh>(&Mesh, "SkeletalMesh'/Game/EnemyZombie/ZombieBase/Mesh/BaseZombieA01.BaseZombieA01'");
+	GetMesh()->SetSkeletalMesh(Mesh);
 
-	TSubclassOf<UAnimInstance> animInstance;
-	CHelpers::GetClass<UAnimInstance>(&animInstance, "AnimBlueprint'/Game/EnemyZombie/ZombieBase/ABP/ABP_ZombieBase.ABP_ZombieBase_C'");
-	GetMesh()->SetAnimInstanceClass(animInstance);
+	CHelpers::GetClass<UAnimInstance>(&AnimInstance, "AnimBlueprint'/Game/EnemyZombie/ZombieBase/ABP/ABP_ZombieBase.ABP_ZombieBase_C'");
+	GetMesh()->SetAnimInstanceClass(AnimInstance);
 
 	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 
@@ -50,6 +51,12 @@ float ABaseZombie::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	if (DieAnimationing)
 		return 0.f;
 	Health -= DamageAmount;
+
+	if(HitParticle)
+	{
+		FVector Location = DamageCauser->GetActorLocation();
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, Location, FRotator(0.0f), FVector(2.0f, 2.0f, 2.0f), false);
+	}
 
 	if(Health<=0)
 	{

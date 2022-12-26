@@ -30,7 +30,7 @@ AMainPlayer::AMainPlayer()
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/SCK_Casual01/Models/Premade_Characters/MESH_PC_02.MESH_PC_02'");
 	GetMesh()->SetSkeletalMesh(mesh);
-
+	
 	TSubclassOf<UAnimInstance> animInstance;
 	CHelpers::GetClass<UAnimInstance>(&animInstance, "AnimBlueprint'/Game/Player/ABP_IK/ABP_MainPlayer.ABP_MainPlayer_C'");
 	GetMesh()->SetAnimInstanceClass(animInstance);

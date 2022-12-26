@@ -19,6 +19,13 @@ private:
 public:
 	UPROPERTY(EditAnywhere, Category = "HP");
 		int Health = 100;
+	UPROPERTY(EditDefaultsOnly)
+		class UParticleSystem* HitParticle;
+
+	class USkeletalMesh* Mesh;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<class UAnimInstance> AnimInstance;
 
 protected:
 	virtual void BeginPlay() override;
