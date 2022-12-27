@@ -13,8 +13,11 @@ public class UE5_CPP_Project : ModuleRules
             "CoreUObject",
             "Engine", 
             "InputCore",
-			"UMG"
-        });
+			"UMG",
+			"AIModule",
+			"GameplayTasks",
+			"NavigationSystem"
+		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 		PublicIncludePaths.Add(ModuleDirectory);
