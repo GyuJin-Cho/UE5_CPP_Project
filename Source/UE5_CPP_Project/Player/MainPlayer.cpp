@@ -14,6 +14,9 @@
 #include "Components/StatusComponent.h"
 #include "Components/StateComponent.h"
 #include "Math/UnrealMathUtility.h"
+#include "GameFramework/Controller.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense_Sight.h"
 
 AMainPlayer::AMainPlayer()
 {
@@ -52,7 +55,8 @@ AMainPlayer::AMainPlayer()
 	CHelpers::GetAsset<UAnimMontage>(&FireMontage, "AnimMontage'/Game/Player/Animation/Fire/TPP_VG_Fire_Normal_Anim_Montage.TPP_VG_Fire_Normal_Anim_Montage'");
 	CHelpers::GetAsset<UAnimMontage>(&ReloadMontage, "AnimMontage'/Game/Player/Animation/Action/TPP_HG_Reload_30Mag_Anim_Montage.TPP_HG_Reload_30Mag_Anim_Montage'");
 	CHelpers::GetAsset<UAnimMontage>(&EmptyFire, "AnimMontage'/Game/Player/Animation/Fire/TPP_VG_Fire_Empty_Anim_Montage.TPP_VG_Fire_Empty_Anim_Montage'");
-	
+
+	SetupStimulus();
 }
 
 void AMainPlayer::BeginPlay()
@@ -256,6 +260,15 @@ void AMainPlayer::ReloadAction()
 	IsReload = false;
 	MainHudWidget->Reload(M4WeaponActor->GetArmo()->GetMaxArmo());
 	M4WeaponActor->SetArmo();
+}
+
+void AMainPlayer::SetupStimulus()
+{
+	
+	CHelpers::CreateActorComponent<UAIPerceptionStimuliSourceComponent>(this,&Stimulus, "Stimulus");
+	CheckNull(Stimulus);
+	Stimulus->RegisterForSense(TSubclassOf<UAISense_Sight>());
+	Stimulus->RegisterWithPerceptionSystem();
 }
 
 void AMainPlayer::Fire()

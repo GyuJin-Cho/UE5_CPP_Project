@@ -6,4 +6,5 @@
 namespace bb_Keys
 {
 	TCHAR const* const TargetLocation = TEXT("TargetLocation");
+	TCHAR const* const CanSeePlayer = TEXT("CanSeePlayer");
 }

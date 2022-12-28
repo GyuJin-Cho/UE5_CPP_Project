@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "EnemyAIControllerBase.generated.h"
 
 UCLASS()
@@ -27,4 +28,10 @@ private:
 
 	class UBlackboardComponent* BBC;
 
+	class UAISenseConfig_Sight* Sight;
+
+	UFUNCTION()
+		void OnTargetDetected(AActor* Actor, FAIStimulus Stimulus);
+	
+	void SetupPerceptionSystem();
 };

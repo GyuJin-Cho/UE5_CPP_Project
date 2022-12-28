@@ -50,6 +50,11 @@ private:
 private:
 	float AimTargetLength=100.0f;
 	float NotAimTargetLength = 300.0f;
+
+	//AI
+private:
+	class UAIPerceptionStimuliSourceComponent* Stimulus;
+
 public:
 	AMainPlayer();
 
@@ -101,5 +106,8 @@ private:
 public:
 	void ReloadAction();
 
+	//AI
+private:
+	void SetupStimulus();
 
 };
