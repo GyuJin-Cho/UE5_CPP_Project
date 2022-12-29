@@ -20,6 +20,7 @@ AEnemyAIControllerBase::AEnemyAIControllerBase(const FObjectInitializer& ObjectI
 	CHelpers::CreateActorComponent<UBlackboardComponent>(this, &BBC, "BlackBoardComponent");
 
 	SetupPerceptionSystem();
+
 }
 
 void AEnemyAIControllerBase::BeginPlay()

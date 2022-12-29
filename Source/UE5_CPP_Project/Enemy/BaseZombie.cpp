@@ -22,6 +22,9 @@ ABaseZombie::ABaseZombie()
 
 	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 
+	bUseControllerRotationYaw = false;
+	//GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 void ABaseZombie::BeginPlay()
