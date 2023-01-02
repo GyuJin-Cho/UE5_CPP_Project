@@ -181,17 +181,21 @@ void AMainPlayer::SprintEnd()
 
 void AMainPlayer::Aim()
 {
+	if (IsSprint)
+		return;
 	CrossHairWidgets->SetVisibility(ESlateVisibility::Visible);
 	State->SetAimMode();
 	IsAim = true;
 	SpringArm->SetRelativeLocation(FVector(-80, 0, 140));
 	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
-	SpringArm->TargetArmLength = 100.0f;
+	SpringArm->TargetArmLength = 150.0f;
 	Status->SetSpeed(ECharacterSpeed::Walk);
 }
 
 void AMainPlayer::AimEnd()
 {
+	if (IsSprint)
+		return;
 	CrossHairWidgets->SetVisibility(ESlateVisibility::Hidden);
 	State->SetIdleMode();
 	IsAim = false;
