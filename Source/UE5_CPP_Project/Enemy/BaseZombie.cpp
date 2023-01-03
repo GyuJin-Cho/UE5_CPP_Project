@@ -6,7 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Particles/ParticleSystem.h"
-
+#include "Sound/SoundCue.h"
 ABaseZombie::ABaseZombie()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -73,6 +73,16 @@ float ABaseZombie::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 void ABaseZombie::Die()
 {
 	DieAnimationing = true;
+	int32 Index = FMath::RandRange(0, 7);
+
+	if(SoundArray[Index])
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), SoundArray[Index],10.0f,10.0f);
+	}
+	else
+	{
+		CLog::Print("Not Sound");
+	}
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 

@@ -16,6 +16,7 @@ public:
 private:
 	bool DieAnimationing;
 	FTimerHandle DeathTimer;
+	
 public:
 	UPROPERTY(EditAnywhere, Category = "HP");
 		int Health = 100;
@@ -26,7 +27,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<class UAnimInstance> AnimInstance;
-
+	UPROPERTY(EditAnywhere, Category = "SoundCueArray")
+		TArray<class USoundCue*> SoundArray;
 protected:
 	virtual void BeginPlay() override;
 
