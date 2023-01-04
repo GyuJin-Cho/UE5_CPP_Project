@@ -190,6 +190,7 @@ void AMainPlayer::Aim()
 	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
 	SpringArm->TargetArmLength = 150.0f;
 	Status->SetSpeed(ECharacterSpeed::Walk);
+	
 }
 
 void AMainPlayer::AimEnd()
@@ -203,6 +204,7 @@ void AMainPlayer::AimEnd()
 	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
 	SpringArm->TargetArmLength = 300.0f;
 	Status->SetSpeed(ECharacterSpeed::Run);
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 
 void AMainPlayer::Auto()
@@ -264,6 +266,18 @@ void AMainPlayer::ReloadAction()
 	IsReload = false;
 	MainHudWidget->Reload(M4WeaponActor->GetArmo()->GetMaxArmo());
 	M4WeaponActor->SetArmo();
+}
+
+void AMainPlayer::Recoil()
+{
+	float PitchRecoil = 0.5f;
+	float YawRecoil = 0.5f;
+
+	float PitchRandom = FMath::RandRange(-1.0f, -0.5f);
+	float YawRandom = FMath::RandRange(-0.5f, 0.5f);
+
+	AddControllerPitchInput(PitchRecoil* PitchRandom);
+	AddControllerYawInput(YawRecoil * YawRandom);
 }
 
 void AMainPlayer::SetupStimulus()

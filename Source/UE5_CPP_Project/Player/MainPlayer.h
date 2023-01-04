@@ -105,6 +105,7 @@ private:
 	// 노티파이 전용
 public:
 	void ReloadAction();
+	void Recoil();
 
 	//AI
 private:
