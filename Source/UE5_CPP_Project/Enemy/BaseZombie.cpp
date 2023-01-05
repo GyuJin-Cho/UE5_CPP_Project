@@ -73,7 +73,9 @@ float ABaseZombie::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 void ABaseZombie::Die()
 {
 	DieAnimationing = true;
-	int32 Index = FMath::RandRange(0, 7);
+	int MinIndex = 0;
+	int MaxIndex = SoundArray.Num() - 1;
+	int32 Index = FMath::RandRange(MinIndex, MaxIndex);
 
 	if(SoundArray[Index])
 	{

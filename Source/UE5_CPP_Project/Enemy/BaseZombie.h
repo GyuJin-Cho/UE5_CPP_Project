@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "PatrolPath.h"
 #include "BaseZombie.generated.h"
 
 UCLASS()
@@ -39,7 +40,7 @@ public:
 
 public:
 	FORCEINLINE bool GetDie() { return DieAnimationing; }
-
+	FORCEINLINE APatrolPath* GetPatrolPath() { return PatrolPath; }
 public:
 	UFUNCTION()
 		virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
@@ -47,4 +48,8 @@ public:
 public:
 	void Die();
 	void FinalDeath();
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta =(AllowPrivateAccess = "true"))
+		class APatrolPath* PatrolPath;
 };
