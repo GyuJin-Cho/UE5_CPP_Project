@@ -22,4 +22,7 @@ private:
 	};
 
 	EDirectionType Direction = EDirectionType::Forward;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
+		bool bIDirectional = true;
 };

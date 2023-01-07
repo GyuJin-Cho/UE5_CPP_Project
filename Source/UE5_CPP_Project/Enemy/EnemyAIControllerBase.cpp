@@ -55,10 +55,10 @@ void AEnemyAIControllerBase::SetupPerceptionSystem()
 	CHelpers::CreateActorComponent<UAISenseConfig_Sight>(this, &Sight, "Sight Config");
 	SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component")));
 	Sight->SightRadius = 500.0f;
-	Sight->LoseSightRadius = Sight->SightRadius + 50.0f;
+	Sight->LoseSightRadius = Sight->SightRadius + 25.0f;
 	Sight->PeripheralVisionAngleDegrees = 90.0f;
 	Sight->SetMaxAge(5.0f);
-	Sight->AutoSuccessRangeFromLastSeenLocation = 900.0f;
+	Sight->AutoSuccessRangeFromLastSeenLocation = 520.0f;
 	Sight->DetectionByAffiliation.bDetectEnemies = true;
 	Sight->DetectionByAffiliation.bDetectFriendlies = true;
 	Sight->DetectionByAffiliation.bDetectNeutrals = true;

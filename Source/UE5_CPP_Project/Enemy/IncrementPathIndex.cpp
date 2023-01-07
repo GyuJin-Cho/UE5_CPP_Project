@@ -4,6 +4,8 @@
 #include "EnemyAIControllerBase.h"
 #include "BaseZombie.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include <cmath>
+
 UIncrementPathIndex::UIncrementPathIndex(const FObjectInitializer& ObjectInitializer)
 {
 	NodeName = TEXT("IncrementPathIndex");
@@ -19,16 +21,21 @@ EBTNodeResult::Type UIncrementPathIndex::ExecuteTask(UBehaviorTreeComponent& Own
 
 	int index = controller->GetBlackBoard()->GetValueAsInt(bb_Keys::PatrolPathIndex);
 
-	if(index>=MaxIndex&&Direction==EDirectionType::Forward)
+	if(bIDirectional)
 	{
-		Direction = EDirectionType::Revers;
+		if (index >= MaxIndex && Direction == EDirectionType::Forward)
+		{
+			Direction = EDirectionType::Revers;
+		}
+		else if (index == MinIndex && Direction == EDirectionType::Revers)
+		{
+			Direction = EDirectionType::Forward;
+		}
 	}
-	else if(index == MinIndex&&Direction==EDirectionType::Revers)
-	{
-		Direction = EDirectionType::Forward;
-	}
-	controller->GetBlackBoard()->SetValueAsInt(bb_Keys::PatrolPathIndex, (Direction == EDirectionType::Forward ? ++index : --index)%NoOfPoint);
 
+	controller->GetBlackBoard()->SetValueAsInt(bb_Keys::PatrolPathIndex, 
+		(Direction == EDirectionType::Forward ? abs(++index) : abs(--index))%NoOfPoint);
+	
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 
 	return EBTNodeResult::Succeeded;
