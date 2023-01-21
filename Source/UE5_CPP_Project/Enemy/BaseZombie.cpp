@@ -26,11 +26,9 @@ ABaseZombie::ABaseZombie()
 	//GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
-	Montages.Add(nullptr);
-	Montages.Add(nullptr);
 	
-	CHelpers::GetAsset<UAnimMontage>(&Montages[0], "AnimMontage'/Game/EnemyZombie/ZombieBase/Animation/Attack/Anim_Monster_Attack_1_Montage.Anim_Monster_Attack_1_Montage'");
-	CHelpers::GetAsset<UAnimMontage>(&Montages[1], "AnimMontage'/Game/EnemyZombie/ZombieBase/Animation/Attack/Anim_Monster_Attack_2_Montage.Anim_Monster_Attack_2_Montage'");
+	CHelpers::GetAsset<UAnimMontage>(&Montages, "AnimMontage'/Game/EnemyZombie/ZombieBase/Animation/Attack/Anim_Monster_Attack_1_Montage.Anim_Monster_Attack_1_Montage'");
+	
 }
 
 void ABaseZombie::BeginPlay()
@@ -104,10 +102,9 @@ void ABaseZombie::FinalDeath()
 
 int ABaseZombie::melee_attack_Implementation()
 {
-	MontageIndex = FMath::RandRange(0, 1);
-	if(Montages[MontageIndex])
+	if (Montages)
 	{
-		PlayAnimMontage(Montages[MontageIndex]);
+		PlayAnimMontage(Montages);
 	}
 	return 0;
 }

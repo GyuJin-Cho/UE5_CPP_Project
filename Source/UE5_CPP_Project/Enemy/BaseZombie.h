@@ -32,7 +32,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "SoundCueArray")
 		TArray<class USoundCue*> SoundArray;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
-		TArray<class UAnimMontage*> Montages;
+		class UAnimMontage* Montages;
 	int MontageIndex = 0;
 
 protected:
@@ -46,7 +46,8 @@ public:
 public:
 	FORCEINLINE bool GetDie() { return DieAnimationing; }
 	FORCEINLINE APatrolPath* GetPatrolPath() { return PatrolPath; }
-	FORCEINLINE TArray<UAnimMontage*> GetMontage() { return Montages; }
+	FORCEINLINE UAnimMontage* GetMontage() { return Montages; }
+	FORCEINLINE int GetMontageIndex() { return MontageIndex; }
 public:
 	UFUNCTION()
 		virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;

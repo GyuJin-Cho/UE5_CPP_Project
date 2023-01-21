@@ -9,4 +9,5 @@ namespace bb_Keys
 	TCHAR const* const CanSeePlayer = TEXT("CanSeePlayer");
 	TCHAR const* const PatrolPathVector = TEXT("PatrolPathVector");
 	TCHAR const* const PatrolPathIndex = TEXT("PatrolPathIndex");
+	TCHAR const* const PlayerIsInMeleeRange = TEXT("PlayerIsInMeleeRange");
 }
