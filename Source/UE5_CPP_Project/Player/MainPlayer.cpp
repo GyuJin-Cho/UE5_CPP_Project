@@ -333,5 +333,30 @@ void AMainPlayer::Equip()
 	}
 }
 
+float AMainPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+
+	if (DieAnimationing)
+		return 0.f;
+	Health -= DamageAmount;
+
+	if (HitParticle)
+	{
+		FVector Location = DamageCauser->GetActorLocation();
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, Location, FRotator(0.0f), FVector(2.0f, 2.0f, 2.0f), false);
+	}
+
+	if (Health <= 0)
+	{
+		Die();
+	}
+
+
+	return DamageAmount;
+}
+
 
 

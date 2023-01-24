@@ -14,6 +14,8 @@ public:
 	bool IsAim;
 	bool IsReload;
 	FTimerHandle RifleFireTimer;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int Health = 100;
 
 	//Components
 private:
@@ -101,6 +103,11 @@ private:
 	void Fire();
 
 	void Equip();
+
+	// Take Damage
+public:
+	UFUNCTION()
+		virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	// 노티파이 전용
 public:

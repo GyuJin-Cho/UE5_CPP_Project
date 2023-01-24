@@ -61,8 +61,17 @@ public:
 
 	int melee_attack_Implementation() override;
 
-	
+public:
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	UFUNCTION()
+		void ArrayClear();
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta =(AllowPrivateAccess = "true"))
 		class APatrolPath* PatrolPath;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision", meta = (AllowPrivateAccess = "true"))
+		class USphereComponent* SphereComponentHand;
+
+	TArray<class AMainPlayer*> MainPlayers;
 };

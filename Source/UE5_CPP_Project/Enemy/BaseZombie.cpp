@@ -7,6 +7,8 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Particles/ParticleSystem.h"
 #include "Sound/SoundCue.h"
+#include "Components/SphereComponent.h"
+#include "Player/MainPlayer.h"
 ABaseZombie::ABaseZombie()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -16,6 +18,7 @@ ABaseZombie::ABaseZombie()
 
 	CHelpers::GetAsset<USkeletalMesh>(&Mesh, "SkeletalMesh'/Game/EnemyZombie/ZombieBase/Mesh/BaseZombieA01.BaseZombieA01'");
 	GetMesh()->SetSkeletalMesh(Mesh);
+	CHelpers::CreateComponent(this, &SphereComponentHand, "SphereComponentHand", GetMesh());
 
 	CHelpers::GetClass<UAnimInstance>(&AnimInstance, "AnimBlueprint'/Game/EnemyZombie/ZombieBase/ABP/ABP_ZombieBase.ABP_ZombieBase_C'");
 	GetMesh()->SetAnimInstanceClass(AnimInstance);
@@ -107,4 +110,23 @@ int ABaseZombie::melee_attack_Implementation()
 		PlayAnimMontage(Montages);
 	}
 	return 0;
+}
+
+void ABaseZombie::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse, const FHitResult& Hit)
+{
+	CheckNull(OtherActor);
+	AMainPlayer* MainPlayer = Cast<AMainPlayer>(OtherActor);
+	CheckNull(MainPlayer);
+	if (MainPlayers.Num() >= 1)
+		return;
+	MainPlayers.Add(MainPlayer);
+	FDamageEvent e;
+	MainPlayer->TakeDamage(10.0f, e, UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+	Destroy();
+}
+
+void ABaseZombie::ArrayClear()
+{
+	MainPlayers.Empty();
 }
