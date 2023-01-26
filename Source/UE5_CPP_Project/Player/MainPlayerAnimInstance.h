@@ -32,6 +32,9 @@ protected:
 		bool Reload;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		bool Die;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		float Pitch;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)

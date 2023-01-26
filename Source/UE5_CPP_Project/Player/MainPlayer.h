@@ -14,8 +14,11 @@ public:
 	bool IsAim;
 	bool IsReload;
 	FTimerHandle RifleFireTimer;
+	bool DieAnimationing;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int Health = 100;
+		float Health = 100.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float MaxHealth = 100.0f;
 
 	//Components
 private:
@@ -41,6 +44,9 @@ private:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 		TSubclassOf<class AM4Weapon> M4Weapon;
+	UPROPERTY(EditAnywhere, Category = "SoundCueArray" ,meta = (AllowPrivateAccess = "true"))
+		class USoundCue* DeathSound;
+
 
 	class AM4Weapon* M4WeaponActor;
 
@@ -108,6 +114,8 @@ private:
 public:
 	UFUNCTION()
 		virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	void Die();
+	void FinalDeath();
 
 	// 노티파이 전용
 public:

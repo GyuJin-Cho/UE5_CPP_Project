@@ -37,5 +37,5 @@ void UMainPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	float YawAngle = Interp.Yaw;
 	Pitch = FMath::ClampAngle(PitchAngle,-90.f,90.f);
 	Yaw = FMath::ClampAngle(YawAngle,-90.f,90.f);
-
+	Die = Player->DieAnimationing;
 }

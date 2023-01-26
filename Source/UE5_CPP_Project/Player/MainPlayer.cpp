@@ -17,7 +17,8 @@
 #include "GameFramework/Controller.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISense_Sight.h"
-
+#include "Engine/CollisionProfile.h"
+#include "Sound/SoundCue.h"
 AMainPlayer::AMainPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -47,6 +48,9 @@ AMainPlayer::AMainPlayer()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 
+	GetCapsuleComponent()->SetCapsuleHalfHeight(94.0f);
+	GetCapsuleComponent()->SetCapsuleRadius(42.0f);
+
 	//Widgets
 	CHelpers::GetClass<UCrossHair>(&CrossHairWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/CrossHair.CrossHair_C'");
 	CHelpers::GetClass<UMainHudWidget>(&MainHudWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/MainHudWidget.MainHudWidget_C'");
@@ -74,6 +78,7 @@ void AMainPlayer::BeginPlay()
 	{
 		MainHudWidget = CreateWidget<UMainHudWidget>(GetWorld(), MainHudWidgetClass);
 		MainHudWidget->AddToViewport();
+		MainHudWidget->HealthUpdate(MaxHealth, MaxHealth);
 	}
 
 	if(M4Weapon)
@@ -121,6 +126,8 @@ void AMainPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void AMainPlayer::OnMoveForward(float InAxis)
 {
 
+	if (State->IsDeadMode())
+		return;
 	FRotator rotator = FRotator(0, GetControlRotation().Yaw, 0);
 	FVector direction = FQuat(rotator).GetForwardVector();
 
@@ -130,6 +137,8 @@ void AMainPlayer::OnMoveForward(float InAxis)
 
 void AMainPlayer::OnMoveRight(float InAxis)
 {
+	if (State->IsDeadMode())
+		return;
 	FRotator rotator = FRotator(0, GetControlRotation().Yaw, 0);
 	FVector direction = FQuat(rotator).GetRightVector();
 
@@ -140,28 +149,38 @@ void AMainPlayer::OnMoveRight(float InAxis)
 
 void AMainPlayer::OnHorizontalLook(float InAxis)
 {
+	if (State->IsDeadMode())
+		return;
 	float rate = 45.0f;
 	AddControllerYawInput(InAxis * rate * GetWorld()->GetDeltaSeconds());
 }
 
 void AMainPlayer::OnVerticalLook(float InAxis)
 {
+	if (State->IsDeadMode())
+		return;
 	float rate = 45.0f;
 	AddControllerPitchInput(InAxis * rate * GetWorld()->GetDeltaSeconds());
 }
 
 void AMainPlayer::Jump()
 {
+	if (State->IsDeadMode())
+		return;
 	ACharacter::Jump();
 }
 
 void AMainPlayer::JumpEnd()
 {
+	if (State->IsDeadMode())
+		return;
 	ACharacter::Jump();
 }
 
 void AMainPlayer::Sprint()
 {
+	if (State->IsDeadMode())
+		return;
 	if(Status->CanMove())
 	{
 		IsSprint = true;
@@ -172,6 +191,8 @@ void AMainPlayer::Sprint()
 
 void AMainPlayer::SprintEnd()
 {
+	if (State->IsDeadMode())
+		return;
 	if (Status->CanMove())
 	{
 		IsSprint = false;
@@ -181,7 +202,7 @@ void AMainPlayer::SprintEnd()
 
 void AMainPlayer::Aim()
 {
-	if (IsSprint)
+	if (IsSprint||State->IsDeadMode())
 		return;
 	CrossHairWidgets->SetVisibility(ESlateVisibility::Visible);
 	State->SetAimMode();
@@ -195,6 +216,8 @@ void AMainPlayer::Aim()
 
 void AMainPlayer::AimEnd()
 {
+	if (State->IsDeadMode())
+		return;
 	if (IsSprint)
 		return;
 	CrossHairWidgets->SetVisibility(ESlateVisibility::Hidden);
@@ -209,6 +232,8 @@ void AMainPlayer::AimEnd()
 
 void AMainPlayer::Auto()
 {
+	if (State->IsDeadMode())
+		return;
 	if(!State->IsFireMode())
 	{
 		if(IsAuto)
@@ -231,6 +256,8 @@ void AMainPlayer::AutoEnd()
 
 void AMainPlayer::Action()
 {
+	if (State->IsDeadMode())
+		return;
 	if(State->IsAimMode())
 	{
 		State->SetFireMode();
@@ -240,6 +267,8 @@ void AMainPlayer::Action()
 
 void AMainPlayer::ActionEnd()
 {
+	if (State->IsDeadMode())
+		return;
 	if(State->IsFireMode())
 	{
 		State->SetAimMode();
@@ -250,6 +279,8 @@ void AMainPlayer::ActionEnd()
 
 void AMainPlayer::Reload()
 {
+	if (State->IsDeadMode())
+		return;
 	if (IsAim)
 		return;
 	if (IsReload)
@@ -263,6 +294,8 @@ void AMainPlayer::Reload()
 
 void AMainPlayer::ReloadAction()
 {
+	if (State->IsDeadMode())
+		return;
 	IsReload = false;
 	MainHudWidget->Reload(M4WeaponActor->GetArmo()->GetMaxArmo());
 	M4WeaponActor->SetArmo();
@@ -291,6 +324,8 @@ void AMainPlayer::SetupStimulus()
 
 void AMainPlayer::Fire()
 {
+	if (State->IsDeadMode())
+		return;
 	if (IsReload)
 		return;
 	if(M4WeaponActor->GetArmo()->GetArmo()!=0)
@@ -334,7 +369,7 @@ void AMainPlayer::Equip()
 }
 
 float AMainPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	AActor* DamageCauser)
+                              AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
@@ -343,20 +378,27 @@ float AMainPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 		return 0.f;
 	Health -= DamageAmount;
 
-	if (HitParticle)
-	{
-		FVector Location = DamageCauser->GetActorLocation();
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, Location, FRotator(0.0f), FVector(2.0f, 2.0f, 2.0f), false);
-	}
+	MainHudWidget->HealthUpdate(Health, MaxHealth);
 
 	if (Health <= 0)
 	{
 		Die();
 	}
 
-
 	return DamageAmount;
 }
 
+void AMainPlayer::Die()
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	DieAnimationing = true;
+	if(DeathSound)
+		UGameplayStatics::PlaySound2D(GetWorld(), DeathSound, 1.0f, 1.0f);
+	State->SetDeadMode();
+}
 
+void AMainPlayer::FinalDeath()
+{
+	//todo
+}
 

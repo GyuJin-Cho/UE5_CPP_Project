@@ -4,7 +4,6 @@
 #include "GameFramework/Character.h"
 #include "PatrolPath.h"
 #include "CombatInterface.h"
-#include "Animation/AnimMontage.h"
 #include "BaseZombie.generated.h"
 
 UCLASS()
@@ -63,9 +62,14 @@ public:
 
 public:
 	UFUNCTION()
-		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+		void OnBeginOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	UFUNCTION()
-		void ArrayClear();
+		void OnEndOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	void ArrayClear();
+	void CollisionOn();
+	void CollisionOff();
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta =(AllowPrivateAccess = "true"))
 		class APatrolPath* PatrolPath;

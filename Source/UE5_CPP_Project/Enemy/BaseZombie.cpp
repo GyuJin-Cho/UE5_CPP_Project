@@ -9,6 +9,8 @@
 #include "Sound/SoundCue.h"
 #include "Components/SphereComponent.h"
 #include "Player/MainPlayer.h"
+#include "Animation/AnimMontage.h"
+#include "Engine/CollisionProfile.h"
 ABaseZombie::ABaseZombie()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -18,8 +20,8 @@ ABaseZombie::ABaseZombie()
 
 	CHelpers::GetAsset<USkeletalMesh>(&Mesh, "SkeletalMesh'/Game/EnemyZombie/ZombieBase/Mesh/BaseZombieA01.BaseZombieA01'");
 	GetMesh()->SetSkeletalMesh(Mesh);
-	CHelpers::CreateComponent(this, &SphereComponentHand, "SphereComponentHand", GetMesh());
-
+	CHelpers::CreateComponentSocket(this, &SphereComponentHand, "SphereComponentHand","AttackRightSocket", GetMesh());
+	SphereComponentHand->SetSphereRadius(20.0f);
 	CHelpers::GetClass<UAnimInstance>(&AnimInstance, "AnimBlueprint'/Game/EnemyZombie/ZombieBase/ABP/ABP_ZombieBase.ABP_ZombieBase_C'");
 	GetMesh()->SetAnimInstanceClass(AnimInstance);
 
@@ -37,7 +39,11 @@ ABaseZombie::ABaseZombie()
 void ABaseZombie::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	SphereComponentHand->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+	//SphereComponentHand->OnComponentHit.AddDynamic(this, &ABaseZombie::OnHit);
+	SphereComponentHand->OnComponentBeginOverlap.AddDynamic(this, &ABaseZombie::OnBeginOverlapAttack);
+	SphereComponentHand->OnComponentEndOverlap.AddDynamic(this, &ABaseZombie::OnEndOverlapAttack);
 }
 
 void ABaseZombie::Tick(float DeltaTime)
@@ -112,9 +118,9 @@ int ABaseZombie::melee_attack_Implementation()
 	return 0;
 }
 
-void ABaseZombie::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	FVector NormalImpulse, const FHitResult& Hit)
+void ABaseZombie::OnBeginOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	CLog::Print("Hit Player");
 	CheckNull(OtherActor);
 	AMainPlayer* MainPlayer = Cast<AMainPlayer>(OtherActor);
 	CheckNull(MainPlayer);
@@ -123,10 +129,25 @@ void ABaseZombie::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	MainPlayers.Add(MainPlayer);
 	FDamageEvent e;
 	MainPlayer->TakeDamage(10.0f, e, UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
-	Destroy();
+}
+
+void ABaseZombie::OnEndOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+
 }
 
 void ABaseZombie::ArrayClear()
 {
 	MainPlayers.Empty();
+}
+
+void ABaseZombie::CollisionOn()
+{
+	SphereComponentHand->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}
+
+void ABaseZombie::CollisionOff()
+{
+	SphereComponentHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ArrayClear();
 }
