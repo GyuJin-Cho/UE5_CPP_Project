@@ -20,6 +20,10 @@ void UIsPlayerInMeleeRange::OnBecomeRelevant(UBehaviorTreeComponent& OwnerComp, 
 	ABaseZombie* zombie = Cast<ABaseZombie>(controller->GetPawn());
 
 	ACharacter* player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	controller->GetBlackBoard()->SetValueAsBool(bb_Keys::PlayerIsInMeleeRange, zombie->GetDistanceTo(player) <= MeleeRange);
+	float distance = zombie->GetDistanceTo(player);
 
+	CLog::Print(distance);
+
+	controller->GetBlackBoard()->SetValueAsBool(bb_Keys::PlayerIsInMeleeRange, distance <= MeleeRange);
+	
 }

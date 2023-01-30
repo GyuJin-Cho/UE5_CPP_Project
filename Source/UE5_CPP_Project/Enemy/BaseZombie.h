@@ -3,11 +3,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "PatrolPath.h"
-#include "CombatInterface.h"
 #include "BaseZombie.generated.h"
 
 UCLASS()
-class UE5_CPP_PROJECT_API ABaseZombie : public ACharacter, public ICombatInterface
+class UE5_CPP_PROJECT_API ABaseZombie : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -55,10 +54,7 @@ public:
 	void Die();
 	void FinalDeath();
 
-	//UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat")
-	//	int melee_attack();
-
-	int melee_attack_Implementation() override;
+	void MeleeAttack();
 
 public:
 	UFUNCTION()

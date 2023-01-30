@@ -1,6 +1,5 @@
 #include "Enemy/MeleeAttack.h"
 #include "Global.h"
-#include "CombatInterface.h"
 #include "EnemyAIControllerBase.h"
 #include "Engine/World.h"
 #include "Engine/LatentActionManager.h"
@@ -17,13 +16,13 @@ UMeleeAttack::UMeleeAttack(const FObjectInitializer& ObjectInitializer)
 EBTNodeResult::Type UMeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	AEnemyAIControllerBase* controller = Cast<AEnemyAIControllerBase>(OwnerComp.GetAIOwner());
-	ABaseZombie* zombie = Cast<ABaseZombie>(controller->GetPawn());
+	
 
-	if(ICombatInterface* Icombat = Cast<ICombatInterface>(zombie))
+	if(ABaseZombie* zombie = Cast<ABaseZombie>(controller->GetPawn()))
 	{
 		if(MontageHasFinished(zombie))
 		{
-			Icombat->Execute_melee_attack(zombie);
+			zombie->MeleeAttack();
 		}
 	}
 

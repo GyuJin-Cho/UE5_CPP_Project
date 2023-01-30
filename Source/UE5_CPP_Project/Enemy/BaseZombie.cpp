@@ -109,18 +109,16 @@ void ABaseZombie::FinalDeath()
 	Destroy();
 }
 
-int ABaseZombie::melee_attack_Implementation()
+void ABaseZombie::MeleeAttack()
 {
-	if (Montages)
+	if(Montages)
 	{
 		PlayAnimMontage(Montages);
 	}
-	return 0;
 }
 
 void ABaseZombie::OnBeginOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	CLog::Print("Hit Player");
 	CheckNull(OtherActor);
 	AMainPlayer* MainPlayer = Cast<AMainPlayer>(OtherActor);
 	CheckNull(MainPlayer);
