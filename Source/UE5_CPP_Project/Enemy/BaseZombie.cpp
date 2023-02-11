@@ -50,6 +50,7 @@ void ABaseZombie::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//CLog::Print(GetActorLocation());
 }
 
 void ABaseZombie::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

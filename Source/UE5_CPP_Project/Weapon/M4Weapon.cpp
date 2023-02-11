@@ -47,7 +47,7 @@ void AM4Weapon::Fire(AMainPlayer* Player)
 	{
 		ShellEject->Activate(true);
 
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Muzzle->GetComponentLocation(), FRotator(0.0f), FVector(1.3f, 1.3f, 1.3f), false);
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Muzzle->GetComponentLocation(), FRotator(0.0f), FVector(1.0f, 1.0f, 1.0f), false);
 		Mesh->PlayAnimation(FireAnimation, false);
 
 		FVector CameraLocation = Player->GetCamera()->GetComponentLocation();

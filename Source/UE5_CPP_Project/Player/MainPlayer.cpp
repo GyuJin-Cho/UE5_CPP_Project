@@ -17,7 +17,10 @@
 #include "GameFramework/Controller.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISense_Sight.h"
+#include "Perception/AISense_Hearing.h"
+#include "Enemy/AI_Tags.h"
 #include "Engine/CollisionProfile.h"
+#include "Engine/Engine.h"
 #include "Sound/SoundCue.h"
 AMainPlayer::AMainPlayer()
 {
@@ -322,6 +325,16 @@ void AMainPlayer::SetupStimulus()
 	Stimulus->RegisterWithPerceptionSystem();
 }
 
+void AMainPlayer::OnDistract()
+{
+	if(DistractionSound)
+	{
+		FVector location = GetActorLocation();
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), DistractionSound, location);
+		UAISense_Hearing::ReportNoiseEvent(GetWorld(), location, 1.0f, this, 0.0f, tags::noise_tag);
+	}
+}
+
 void AMainPlayer::Fire()
 {
 	if (State->IsDeadMode())
@@ -342,6 +355,7 @@ void AMainPlayer::Fire()
 			M4WeaponActor->Fire(this);
 		}
 		MainHudWidget->DecreaseArmo(M4WeaponActor->GetArmo()->GetArmo());
+		OnDistract();
 	}
 	else
 	{

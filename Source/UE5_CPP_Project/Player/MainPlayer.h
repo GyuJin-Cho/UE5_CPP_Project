@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Sound/SoundBase.h"
 #include "MainPlayer.generated.h"
 
 UCLASS()
@@ -124,6 +125,9 @@ public:
 
 	//AI
 private:
-	void SetupStimulus();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+		USoundBase* DistractionSound;
+	void SetupStimulus();
+	void OnDistract();
 };

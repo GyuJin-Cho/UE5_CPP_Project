@@ -30,8 +30,12 @@ private:
 
 	class UAISenseConfig_Sight* Sight;
 
+	class UAISenseConfig_Hearing* HearingConfig;
+
 	UFUNCTION()
 		void OnTargetDetected(AActor* Actor, FAIStimulus Stimulus);
-	
+	UFUNCTION()
+		void OnUpdated(TArray<AActor*> const& UpdatedActors);
+
 	void SetupPerceptionSystem();
 };
