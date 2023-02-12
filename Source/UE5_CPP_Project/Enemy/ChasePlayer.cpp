@@ -12,7 +12,7 @@ UChasePlayer::UChasePlayer(const FObjectInitializer& FObjectInitializer)
 EBTNodeResult::Type UChasePlayer::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	AEnemyAIControllerBase* controller = Cast<AEnemyAIControllerBase>(OwnerComp.GetAIOwner());
-	FVector PlayerLocation = controller->GetBlackBoard()->GetValueAsVector(bb_Keys::TargetLocation);
+	FVector PlayerLocation = controller->GetBlackBoard()->GetValueAsVector(GetSelectedBlackboardKey());
 
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(controller, PlayerLocation);
 

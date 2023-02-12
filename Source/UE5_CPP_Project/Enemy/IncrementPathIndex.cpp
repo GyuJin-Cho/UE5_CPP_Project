@@ -19,7 +19,7 @@ EBTNodeResult::Type UIncrementPathIndex::ExecuteTask(UBehaviorTreeComponent& Own
 	int MinIndex = 0;
 	int MaxIndex = NoOfPoint - 1;
 
-	int index = controller->GetBlackBoard()->GetValueAsInt(bb_Keys::PatrolPathIndex);
+	int index = controller->GetBlackBoard()->GetValueAsInt(GetSelectedBlackboardKey());
 
 	if(bIDirectional)
 	{
@@ -33,7 +33,7 @@ EBTNodeResult::Type UIncrementPathIndex::ExecuteTask(UBehaviorTreeComponent& Own
 		}
 	}
 
-	controller->GetBlackBoard()->SetValueAsInt(bb_Keys::PatrolPathIndex, 
+	controller->GetBlackBoard()->SetValueAsInt(GetSelectedBlackboardKey(),
 		(Direction == EDirectionType::Forward ? abs(++index) : abs(--index))%NoOfPoint);
 	
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

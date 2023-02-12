@@ -13,7 +13,7 @@ EBTNodeResult::Type UStopInvestingating::ExecuteTask(UBehaviorTreeComponent& Own
 {
 
 	AEnemyAIControllerBase* Controller = Cast<AEnemyAIControllerBase>(OwnerComp.GetAIOwner());
-	Controller->GetBlackBoard()->SetValueAsBool(bb_Keys::ISInvestigating, false);
+	Controller->GetBlackBoard()->SetValueAsBool(GetSelectedBlackboardKey(), false);
 
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 

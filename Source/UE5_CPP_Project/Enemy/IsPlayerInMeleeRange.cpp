@@ -9,6 +9,7 @@
 
 UIsPlayerInMeleeRange::UIsPlayerInMeleeRange()
 {
+	bNotifyBecomeRelevant = true;
 	NodeName = TEXT("IsPlayerInMeleeRange");
 }
 
@@ -16,14 +17,13 @@ void UIsPlayerInMeleeRange::OnBecomeRelevant(UBehaviorTreeComponent& OwnerComp, 
 {
 	Super::OnBecomeRelevant(OwnerComp, NodeMemory);
 
-	AEnemyAIControllerBase* controller = Cast<AEnemyAIControllerBase>(OwnerComp.GetAIOwner());
-	ABaseZombie* zombie = Cast<ABaseZombie>(controller->GetPawn());
+	AEnemyAIControllerBase* const cont = Cast<AEnemyAIControllerBase>(OwnerComp.GetAIOwner());
+	ABaseZombie* const zombie = Cast<ABaseZombie>(cont->GetPawn());
 
-	ACharacter* player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	float distance = zombie->GetDistanceTo(player);
+	ACharacter* const player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	float const distance = zombie->GetDistanceTo(player);
 
 	CLog::Print(distance);
 
-	controller->GetBlackBoard()->SetValueAsBool(bb_Keys::PlayerIsInMeleeRange, distance <= MeleeRange);
-	
+	cont->GetBlackBoard()->SetValueAsBool(GetSelectedBlackboardKey(), distance <= MeleeRange);
 }

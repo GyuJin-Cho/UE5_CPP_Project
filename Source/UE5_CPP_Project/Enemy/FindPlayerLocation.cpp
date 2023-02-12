@@ -25,12 +25,12 @@ EBTNodeResult::Type UFindPlayerLocation::ExecuteTask(UBehaviorTreeComponent& Own
 		UNavigationSystemV1* navsystem = UNavigationSystemV1::GetCurrent(GetWorld());
 		if(navsystem->GetRandomPointInNavigableRadius(playerlocation,SearchRadius,navlocation,nullptr))
 		{
-			controller->GetBlackBoard()->SetValueAsVector(bb_Keys::TargetLocation,navlocation.Location);
+			controller->GetBlackBoard()->SetValueAsVector(GetSelectedBlackboardKey(),navlocation.Location);
 		}
 	}
 	else
 	{
-		controller->GetBlackBoard()->SetValueAsVector(bb_Keys::TargetLocation, playerlocation);
+		controller->GetBlackBoard()->SetValueAsVector(GetSelectedBlackboardKey(), playerlocation);
 	}
 
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

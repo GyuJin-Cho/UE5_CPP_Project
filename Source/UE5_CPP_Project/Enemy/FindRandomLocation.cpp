@@ -36,7 +36,7 @@ EBTNodeResult::Type UFindRandomLocation::ExecuteTask(UBehaviorTreeComponent& Own
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
 	if(NavSystem->GetRandomPointInNavigableRadius(origin,SearchRadius,Location,nullptr))
 	{
-		Controller->GetBlackBoard()->SetValueAsVector(bb_Keys::TargetLocation, Location.Location);
+		Controller->GetBlackBoard()->SetValueAsVector(GetSelectedBlackboardKey(), Location.Location);
 	}
 
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

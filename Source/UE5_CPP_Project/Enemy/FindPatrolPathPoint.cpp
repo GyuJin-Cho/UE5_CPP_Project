@@ -20,7 +20,7 @@ EBTNodeResult::Type UFindPatrolPathPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 
 	FVector GlobalPoint = zombie->GetPatrolPath()->GetActorTransform().TransformPosition(point);
 
-	controller->GetBlackBoard()->SetValueAsVector(bb_Keys::PatrolPathVector, GlobalPoint);
+	controller->GetBlackBoard()->SetValueAsVector(PatrolPathvectorKey.SelectedKeyName, GlobalPoint);
 
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	return EBTNodeResult::Succeeded;
