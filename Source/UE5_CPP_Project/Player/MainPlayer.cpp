@@ -99,8 +99,6 @@ void AMainPlayer::BeginPlay()
 void AMainPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	
 }
 
 void AMainPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -128,6 +126,16 @@ void AMainPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void AMainPlayer::OnMoveForward(float InAxis)
 {
+	if(InAxis<0)
+	{
+		IsSprint = false;
+		Status->SetSpeed(ECharacterSpeed::Run);
+		IsBackMoving = true;
+	}
+	else
+	{
+		IsBackMoving = false;
+	}
 
 	if (State->IsDeadMode())
 		return;
@@ -140,6 +148,7 @@ void AMainPlayer::OnMoveForward(float InAxis)
 
 void AMainPlayer::OnMoveRight(float InAxis)
 {
+	
 	if (State->IsDeadMode())
 		return;
 	FRotator rotator = FRotator(0, GetControlRotation().Yaw, 0);
@@ -182,6 +191,8 @@ void AMainPlayer::JumpEnd()
 
 void AMainPlayer::Sprint()
 {
+	if (IsBackMoving)
+		return;
 	if (State->IsDeadMode())
 		return;
 	if(Status->CanMove())
@@ -194,6 +205,8 @@ void AMainPlayer::Sprint()
 
 void AMainPlayer::SprintEnd()
 {
+	if (IsBackMoving)
+		return;
 	if (State->IsDeadMode())
 		return;
 	if (Status->CanMove())

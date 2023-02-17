@@ -14,6 +14,7 @@ public:
 	bool IsAuto;
 	bool IsAim;
 	bool IsReload;
+	bool IsBackMoving;
 	FTimerHandle RifleFireTimer;
 	bool DieAnimationing;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
