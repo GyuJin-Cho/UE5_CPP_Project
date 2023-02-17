@@ -42,7 +42,14 @@ void AM4Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 	ABaseZombie* Zombie = Cast<ABaseZombie>(OtherActor);
 	CheckNull(Zombie);
 	FDamageEvent e;
-	Zombie->TakeDamage(10.0f, e, UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+	if(Hit.BoneName==FName("Head_M"))
+	{
+		Zombie->TakeDamage(50.0f, e, UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+	}
+	else
+	{
+		Zombie->TakeDamage(10.0f, e, UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+	}
 	Destroy();
 }
 

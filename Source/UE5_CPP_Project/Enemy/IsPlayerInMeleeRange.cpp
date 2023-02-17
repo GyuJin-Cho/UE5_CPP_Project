@@ -23,7 +23,7 @@ void UIsPlayerInMeleeRange::OnBecomeRelevant(UBehaviorTreeComponent& OwnerComp, 
 	ACharacter* const player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	float const distance = zombie->GetDistanceTo(player);
 
-	CLog::Print(distance);
+	//CLog::Print(distance);
 
 	cont->GetBlackBoard()->SetValueAsBool(GetSelectedBlackboardKey(), distance <= MeleeRange);
 }

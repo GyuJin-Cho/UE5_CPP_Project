@@ -64,11 +64,10 @@ float ABaseZombie::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	
-	
+	CLog::Print(DamageAmount);
 	if (DieAnimationing)
 		return 0.f;
 	Health -= DamageAmount;
-
 	if(HitParticle)
 	{
 		FVector Location = DamageCauser->GetActorLocation();
