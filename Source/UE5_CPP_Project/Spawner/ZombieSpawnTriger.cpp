@@ -1,4 +1,4 @@
-#include "Spawn/ZombieSpawnTriger.h"
+#include "Spawner/ZombieSpawnTriger.h"
 #include "Global.h"
 #include "ZombieSpawner.h"
 #include "Components/BoxComponent.h"

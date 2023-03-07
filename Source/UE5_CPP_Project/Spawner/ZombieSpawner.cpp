@@ -1,4 +1,4 @@
-#include "Spawn/ZombieSpawner.h"
+#include "Spawner/ZombieSpawner.h"
 
 AZombieSpawner::AZombieSpawner()
 {
