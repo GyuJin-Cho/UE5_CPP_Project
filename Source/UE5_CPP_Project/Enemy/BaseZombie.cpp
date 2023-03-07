@@ -31,7 +31,8 @@ ABaseZombie::ABaseZombie()
 	//GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
-	
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
 	CHelpers::GetAsset<UAnimMontage>(&Montages, "AnimMontage'/Game/EnemyZombie/ZombieBase/Animation/Attack/Anim_Monster_Attack_1_Montage.Anim_Monster_Attack_1_Montage'");
 	
 }
