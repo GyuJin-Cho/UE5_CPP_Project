@@ -31,6 +31,8 @@ public:
 		TArray<class USoundCue*> SoundArray;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 		class UAnimMontage* Montages;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
+		class USphereComponent* SphereComponentHand;
 	int MontageIndex = 0;
 
 protected:
@@ -70,8 +72,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta =(AllowPrivateAccess = "true"))
 		class APatrolPath* PatrolPath;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision", meta = (AllowPrivateAccess = "true"))
-		class USphereComponent* SphereComponentHand;
+
 
 	TArray<class AMainPlayer*> MainPlayers;
 };
