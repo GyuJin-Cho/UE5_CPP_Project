@@ -22,6 +22,7 @@
 #include "Engine/CollisionProfile.h"
 #include "Engine/Engine.h"
 #include "Sound/SoundCue.h"
+#include "Widgets/PauseMenu.h"
 AMainPlayer::AMainPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -57,6 +58,7 @@ AMainPlayer::AMainPlayer()
 	//Widgets
 	CHelpers::GetClass<UCrossHair>(&CrossHairWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/CrossHair.CrossHair_C'");
 	CHelpers::GetClass<UMainHudWidget>(&MainHudWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/MainHudWidget.MainHudWidget_C'");
+	CHelpers::GetClass<UPauseMenu>(&PauseMenuWidgetClass, "WidgetBlueprint'/Game/PauseMenu/PauseMenuWidget.PauseMenuWidget_C'");
 
 	//Montage
 	CHelpers::GetAsset<UAnimMontage>(&FireMontage, "AnimMontage'/Game/Player/Animation/Fire/TPP_VG_Fire_Normal_Anim_Montage.TPP_VG_Fire_Normal_Anim_Montage'");
@@ -69,7 +71,6 @@ AMainPlayer::AMainPlayer()
 void AMainPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-
 	if(CrossHairWidgetClass)
 	{
 		CrossHairWidgets = CreateWidget<UCrossHair>(GetWorld(), CrossHairWidgetClass);
@@ -82,6 +83,13 @@ void AMainPlayer::BeginPlay()
 		MainHudWidget = CreateWidget<UMainHudWidget>(GetWorld(), MainHudWidgetClass);
 		MainHudWidget->AddToViewport();
 		MainHudWidget->HealthUpdate(MaxHealth, MaxHealth);
+	}
+
+	if(PauseMenuWidgetClass)
+	{
+		PauseMenuWidget = CreateWidget<UPauseMenu>(GetWorld(), PauseMenuWidgetClass);
+		PauseMenuWidget->AddToViewport();
+		PauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 
 	if(M4Weapon)
@@ -122,6 +130,7 @@ void AMainPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Action", EInputEvent::IE_Pressed, this, &AMainPlayer::Action);
 	PlayerInputComponent->BindAction("Action", EInputEvent::IE_Released, this, &AMainPlayer::ActionEnd);
 	PlayerInputComponent->BindAction("Reload", EInputEvent::IE_Pressed, this, &AMainPlayer::Reload);
+	PlayerInputComponent->BindAction("PauseMenu", EInputEvent::IE_Pressed, this, &AMainPlayer::PuaseMenuOn).bExecuteWhenPaused = true;
 }
 
 void AMainPlayer::OnMoveForward(float InAxis)
@@ -393,6 +402,27 @@ void AMainPlayer::Equip()
 			RighthandSocket->AttachActor(M4WeaponActor,GetMesh());
 		}
 	}
+}
+
+void AMainPlayer::PuaseMenuOn()
+{
+	
+	if(PauseMenuWidget)
+	{
+		if (PauseMenuWidget->GetVisibility() == ESlateVisibility::Hidden)
+		{
+			PauseMenuWidget->SetVisibility(ESlateVisibility::Visible);
+			UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetPause(true);
+			UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetShowMouseCursor(true);
+		}
+		else
+		{
+			PauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);
+			UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetPause(false);
+			UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetShowMouseCursor(false);
+		}
+	}
+	
 }
 
 float AMainPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,

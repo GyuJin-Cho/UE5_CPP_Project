@@ -42,6 +42,11 @@ private:
 
 	class UMainHudWidget* MainHudWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+		TSubclassOf<class UPauseMenu> PauseMenuWidgetClass;
+
+	class UPauseMenu* PauseMenuWidget;
+
 	//Weapon
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
@@ -111,6 +116,8 @@ private:
 	void Fire();
 
 	void Equip();
+
+	void PuaseMenuOn();
 
 	// Take Damage
 public:
