@@ -11,6 +11,8 @@
 #include "Player/MainPlayer.h"
 #include "Animation/AnimMontage.h"
 #include "Engine/CollisionProfile.h"
+#include "Widgets/MainHudWidget.h"
+
 ABaseZombie::ABaseZombie()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -100,8 +102,16 @@ void ABaseZombie::Die()
 		CLog::Print("Not Sound");
 	}
 
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	AMainPlayer* MainPlayer =Cast<AMainPlayer>( UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
+	if(MainPlayer)
+	{
+		const int EnemyCount = -1;
+		MainPlayer->GetMainHudWidget()->SetEnemyCount(EnemyCount,true);
+	}
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseZombie::FinalDeath, 3.0f, false);
 }
 
@@ -112,7 +122,7 @@ void ABaseZombie::FinalDeath()
 
 void ABaseZombie::MeleeAttack()
 {
-	if(Montages)
+	if(Montages&&!DieAnimationing)
 	{
 		PlayAnimMontage(Montages);
 	}

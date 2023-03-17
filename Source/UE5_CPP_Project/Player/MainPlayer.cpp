@@ -2,6 +2,8 @@
 #include "Global.h"
 #include "Widgets/CrossHair.h"
 #include "Widgets/MainHudWidget.h"
+#include "Widgets/PauseMenu.h"
+#include "Widgets/GameOverClearWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -22,7 +24,6 @@
 #include "Engine/CollisionProfile.h"
 #include "Engine/Engine.h"
 #include "Sound/SoundCue.h"
-#include "Widgets/PauseMenu.h"
 AMainPlayer::AMainPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -59,6 +60,7 @@ AMainPlayer::AMainPlayer()
 	CHelpers::GetClass<UCrossHair>(&CrossHairWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/CrossHair.CrossHair_C'");
 	CHelpers::GetClass<UMainHudWidget>(&MainHudWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/MainHudWidget.MainHudWidget_C'");
 	CHelpers::GetClass<UPauseMenu>(&PauseMenuWidgetClass, "WidgetBlueprint'/Game/PauseMenu/PauseMenuWidget.PauseMenuWidget_C'");
+	CHelpers::GetClass<UGameOverClearWidget>(&GameOverClearWidgetClass, "WidgetBlueprint'/Game/GameOverClearWidgets/GameOverClearWidget_BP.GameOverClearWidget_BP_C'");
 
 	//Montage
 	CHelpers::GetAsset<UAnimMontage>(&FireMontage, "AnimMontage'/Game/Player/Animation/Fire/TPP_VG_Fire_Normal_Anim_Montage.TPP_VG_Fire_Normal_Anim_Montage'");
@@ -92,6 +94,12 @@ void AMainPlayer::BeginPlay()
 		PauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 
+	if (GameOverClearWidgetClass)
+	{
+		GameOverClearWidget = CreateWidget<UGameOverClearWidget>(GetWorld(), GameOverClearWidgetClass);
+		GameOverClearWidget->AddToViewport();
+		GameOverClearWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
 	if(M4Weapon)
 	{
 		FActorSpawnParameters SpawnParameters;
@@ -449,6 +457,8 @@ void AMainPlayer::Die()
 {
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	DieAnimationing = true;
+	GameOverClearWidget->SetVisibility(ESlateVisibility::Visible);
+	GameOverClearWidget->GameOver();
 	if(DeathSound)
 		UGameplayStatics::PlaySound2D(GetWorld(), DeathSound, 1.0f, 1.0f);
 	State->SetDeadMode();
@@ -457,5 +467,11 @@ void AMainPlayer::Die()
 void AMainPlayer::FinalDeath()
 {
 	//todo
+}
+
+void AMainPlayer::Clear()
+{
+	GameOverClearWidget->SetVisibility(ESlateVisibility::Visible);
+	GameOverClearWidget->Clear();
 }
 

@@ -31,7 +31,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "BaseZombie", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<class AManZombie> ManZombie;
 
+	UPROPERTY(EditDefaultsOnly, Category = "BaseZombie", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<class AWomanZombie> WomanZombie;
+
 	const int MinRange = 0;
-	const int MaxRange = 1;
+	const int MaxRange = 2;
 
 };

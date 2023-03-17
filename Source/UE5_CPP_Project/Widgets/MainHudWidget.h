@@ -26,4 +26,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void SetMaxArmo(int MaxArmo);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void SetEnemyCount(int EnemyCount, bool IsDeath);
 };

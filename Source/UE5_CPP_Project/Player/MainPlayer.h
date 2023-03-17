@@ -47,6 +47,11 @@ private:
 
 	class UPauseMenu* PauseMenuWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+		TSubclassOf<class UGameOverClearWidget> GameOverClearWidgetClass;
+
+	class UGameOverClearWidget* GameOverClearWidget;
+
 	//Weapon
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
@@ -96,6 +101,7 @@ public:
 	FORCEINLINE UStatusComponent* GetStatus() { return Status; }
 	FORCEINLINE UStateComponent* GetState() { return State; }
 	FORCEINLINE UCameraComponent* GetCamera() { return Camera; }
+	FORCEINLINE UMainHudWidget* GetMainHudWidget() { return MainHudWidget; }
 private:
 	void OnMoveForward(float InAxis);
 	void OnMoveRight(float InAxis);
@@ -125,7 +131,7 @@ public:
 		virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	void Die();
 	void FinalDeath();
-
+	void Clear();
 	// 노티파이 전용
 public:
 	void ReloadAction();

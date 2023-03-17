@@ -5,6 +5,8 @@
 #include "Enemy/BaseZombie.h"
 #include "Enemy/ManZombie.h"
 #include "Player/MainPlayer.h"
+#include "Enemy/WomanZombie.h"
+#include "Widgets/MainHudWidget.h"
 AZombieSpawnTriger::AZombieSpawnTriger()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -12,6 +14,7 @@ AZombieSpawnTriger::AZombieSpawnTriger()
 	CHelpers::CreateComponent(this, &Box, "BoxCollision");
 	CHelpers::GetClass<ABaseZombie>(&BaseZombie, "Blueprint'/Game/EnemyZombie/ZombieBase/BaseZombie_BP.BaseZombie_BP_C'");
 	CHelpers::GetClass<AManZombie>(&ManZombie, "Blueprint'/Game/EnemyZombie/ManZombie/ManZombie.ManZombie_C'");
+	CHelpers::GetClass<AWomanZombie>(&WomanZombie, "Blueprint'/Game/EnemyZombie/WomanZombie/WomanZombie_BP.WomanZombie_BP_C'");
 }
 
 void AZombieSpawnTriger::BeginPlay()
@@ -49,7 +52,17 @@ void AZombieSpawnTriger::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent
 				GetWorld()->SpawnActor<ABaseZombie>(ManZombie, ZombieSpawners[i]->GetTransform());
 				break;
 			}
+			case 2:
+			{
+				GetWorld()->SpawnActor<ABaseZombie>(WomanZombie, ZombieSpawners[i]->GetTransform());
+				break;
 			}
+			}
+		}
+		UMainHudWidget* Hud = player->GetMainHudWidget();
+		if(Hud)
+		{
+			Hud->SetEnemyCount(ZombieSpawners.Num(),false);
 		}
 		Destroy();
 	}
