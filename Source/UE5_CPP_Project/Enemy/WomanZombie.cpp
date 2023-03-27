@@ -4,7 +4,7 @@
 #include "Components/SphereComponent.h"
 AWomanZombie::AWomanZombie()
 {
-	CHelpers::GetAsset<USkeletalMesh>(&Mesh, "SkeletalMesh'/Game/Characters/Zombies/ETC_Zombie/ZombieD/D_V1/Meshes/ZombieD_V1.ZombieD_V1'");
+	CHelpers::GetAsset<USkeletalMesh>(&Mesh, "SkeletalMesh'/Game/EnemyZombie/WomanZombie/Mesh/ZombieD_V1.ZombieD_V1'");
 	GetMesh()->SetSkeletalMesh(Mesh);
 	CHelpers::GetClass<UAnimInstance>(&AnimInstance, "AnimBlueprint'/Game/EnemyZombie/WomanZombie/ABP/ABP_WomanZombie.ABP_WomanZombie_C'");
 	GetMesh()->SetAnimInstanceClass(AnimInstance);
