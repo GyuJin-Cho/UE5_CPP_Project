@@ -91,9 +91,9 @@ void AEnemyAIControllerBase::SetupPerceptionSystem()
 		Sight->PeripheralVisionAngleDegrees = 90.0f;
 		Sight->SetMaxAge(5.0f);
 		Sight->AutoSuccessRangeFromLastSeenLocation = 520.0f;
-		Sight->DetectionByAffiliation.bDetectEnemies =
-			Sight->DetectionByAffiliation.bDetectFriendlies =
-			Sight->DetectionByAffiliation.bDetectNeutrals = true;
+		Sight->DetectionByAffiliation.bDetectEnemies = true;
+		Sight->DetectionByAffiliation.bDetectFriendlies = true;
+		Sight->DetectionByAffiliation.bDetectNeutrals = true;
 
 		GetPerceptionComponent()->SetDominantSense(*Sight->GetSenseImplementation());
 		GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyAIControllerBase::OnTargetDetected);
