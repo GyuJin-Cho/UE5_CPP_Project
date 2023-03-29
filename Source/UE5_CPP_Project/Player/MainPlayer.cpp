@@ -212,6 +212,8 @@ void AMainPlayer::Sprint()
 		return;
 	if (State->IsDeadMode())
 		return;
+	if (State->IsAimMode())
+		return;
 	if(Status->CanMove())
 	{
 		IsSprint = true;
@@ -225,6 +227,8 @@ void AMainPlayer::SprintEnd()
 	if (IsBackMoving)
 		return;
 	if (State->IsDeadMode())
+		return;
+	if (State->IsAimMode())
 		return;
 	if (Status->CanMove())
 	{

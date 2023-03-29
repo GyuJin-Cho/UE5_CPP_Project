@@ -55,17 +55,6 @@ void AM4Weapon::Fire(AMainPlayer* Player)
 		FTransform CameraWorldTransForm = Player->GetCamera()->GetComponentTransform();
 		FHitResult Result;
 		GetWorld()->SpawnActor<AM4Projectile>(ProjectileActorClass, CameraWorldTransForm);
-
-		//if(GetWorld()->LineTraceSingleByChannel(Result, CameraLocation, CameraForward + CameraLocation, ECollisionChannel::ECC_Visibility))
-		//{
-		//	Result
-		//
-		//
-		//}
-		//else
-		//{
-		//	return;
-		//}
 		
 		Armo->SetArmo(Armo->GetArmo() - 1);
 	}
@@ -76,8 +65,3 @@ void AM4Weapon::SetArmo()
 {
 	Armo->SetArmo(Armo->GetMaxArmo());
 }
-
-//void AM4Weapon::Equip(AMainPlayer* Player)
-//{
-//	
-//}

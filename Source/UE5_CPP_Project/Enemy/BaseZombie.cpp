@@ -12,6 +12,7 @@
 #include "Animation/AnimMontage.h"
 #include "Engine/CollisionProfile.h"
 #include "Widgets/MainHudWidget.h"
+#include "EnemyAIControllerBase.h"
 
 ABaseZombie::ABaseZombie()
 {
@@ -67,7 +68,6 @@ float ABaseZombie::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	
-	CLog::Print(DamageAmount);
 	if (DieAnimationing)
 		return 0.f;
 	Health -= DamageAmount;
@@ -109,7 +109,7 @@ void ABaseZombie::Die()
 		const int EnemyCount = -1;
 		MainPlayer->GetMainHudWidget()->SetEnemyCount(EnemyCount,true);
 	}
-
+	GetController()->UnPossess();
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseZombie::FinalDeath, 3.0f, false);
