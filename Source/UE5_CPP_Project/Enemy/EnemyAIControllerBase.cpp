@@ -17,7 +17,7 @@
 #include "AI_Tags.h"
 #include "GameFramework/Character.h"
 
-
+/**CDO 를통해 BT, BTComponent, BBComponent를 생성한다.*/
 AEnemyAIControllerBase::AEnemyAIControllerBase(const FObjectInitializer& ObjectInitializer)
 {
 	CHelpers::GetAsset<UBehaviorTree>(&BehaviorTree, "BehaviorTree'/Game/EnemyZombie/ZombieBase/AI/Behavior/BT.BT'");
@@ -29,6 +29,7 @@ AEnemyAIControllerBase::AEnemyAIControllerBase(const FObjectInitializer& ObjectI
 
 }
 
+/**게임이 시작과 동시에 BT를 실행한다.*/
 void AEnemyAIControllerBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -36,6 +37,7 @@ void AEnemyAIControllerBase::BeginPlay()
 	BTC->StartTree(*BehaviorTree);
 }
 
+/**브랙보드를 초기화하는 함수 OnPossess는 현재 가지고있는 폰을 빙의한다.*/
 void AEnemyAIControllerBase::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
@@ -47,6 +49,7 @@ void AEnemyAIControllerBase::OnPossess(APawn* InPawn)
 
 }
 
+/**플레이어를 찾는함수*/
 void AEnemyAIControllerBase::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 {
 	
@@ -56,6 +59,7 @@ void AEnemyAIControllerBase::OnTargetDetected(AActor* Actor, FAIStimulus Stimulu
 	}
 }
 
+/**좀비 자신이 총소리가 들리는지 플레이어가 감지되는지 계속 업데이트를 통해 찾는다.*/
 void AEnemyAIControllerBase::OnUpdated(TArray<AActor*> const& UpdatedActors)
 {
 	for(int x = 0; x<UpdatedActors.Num();x++)
@@ -80,6 +84,7 @@ void AEnemyAIControllerBase::OnUpdated(TArray<AActor*> const& UpdatedActors)
 	}
 }
 
+/**총소리 및 플레이어의 탐지 거리여부를 조정하는 함수이다.*/
 void AEnemyAIControllerBase::SetupPerceptionSystem()
 {
 	CHelpers::CreateActorComponent<UAISenseConfig_Sight>(this, &Sight, "Sight Config");

@@ -1,3 +1,4 @@
+/**남성형 좀비 BaseZombie를 상속받음*/
 #pragma once
 
 #include "CoreMinimal.h"

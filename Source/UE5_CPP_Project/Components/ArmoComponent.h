@@ -1,3 +1,4 @@
+/**Armo Component 플레이어의 총알을 관리해주는 Component*/
 #pragma once
 
 #include "CoreMinimal.h"

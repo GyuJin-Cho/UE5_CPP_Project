@@ -1,3 +1,4 @@
+/**여성형 좀비 좀비베이스를 상속받았다.*/
 #pragma once
 
 #include "CoreMinimal.h"

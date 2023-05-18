@@ -1,3 +1,4 @@
+/**State Component 플레이어의 상태를 체크하는 Component*/
 #pragma once
 
 #include "CoreMinimal.h"
@@ -9,7 +10,7 @@ enum class EStateType : uint8
 {
 	Idle, Fire, Aim, Hitted, Dead, Max
 };
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStateTypeChanged, EStateType, InPrevType, EStateType, InNewType);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStateTypeChanged, EStateType, InPrevType, EStateType, InNewType);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE5_CPP_PROJECT_API UStateComponent : public UActorComponent
@@ -49,8 +50,8 @@ private:
 	void ChangeType(EStateType InNewType);
 
 public:
-	UPROPERTY(BlueprintAssignable)
-		FStateTypeChanged OnStateTypeChanged;
+	//UPROPERTY(BlueprintAssignable)
+	//	FStateTypeChanged OnStateTypeChanged;
 
 private:
 	EStateType Type;

@@ -1,3 +1,4 @@
+/**Status Component 체력과 현재 걷는지 뛰는지의 상태를 얻는 Component*/
 #pragma once
 
 #include "CoreMinimal.h"
@@ -25,15 +26,9 @@ public:
 	void AddHealth(float InAmount);
 	void SubHealth(float InAmount);
 
-	void AddStamina(float InAmount);
-	void SubStamina(float InAmount);
-
 private:
 	UPROPERTY(EditAnywhere, Category = "Health")
 		float MaxHealth = 100.0f;
-
-	UPROPERTY(EditAnywhere, Category = "Health")
-		float MaxStamina = 100.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Speed")
 		float Speed[(int32)ECharacterSpeed::Max] = { 200, 400, 600 };
@@ -48,9 +43,6 @@ public:
 	FORCEINLINE float GetMaxHealth() { return MaxHealth; }
 	FORCEINLINE float GetHealth() { return Health; }
 
-	FORCEINLINE float GetMaxStamina() { return MaxStamina; }
-	FORCEINLINE float GetStamina() { return Stamina; }
-
 	FORCEINLINE float GetWalkSpeed() { return Speed[(int32)ECharacterSpeed::Walk]; }
 	FORCEINLINE float GetRunSpeed() { return Speed[(int32)ECharacterSpeed::Run]; }
 	FORCEINLINE float GetSprintSpeed() { return Speed[(int32)ECharacterSpeed::Sprint]; }
@@ -58,7 +50,6 @@ public:
 	FORCEINLINE bool CanMove() { return  bCanMove; }
 private:
 	float Health = 100.0f;
-	float Stamina = 100.0f;
 
 	bool bCanMove = true;
 };

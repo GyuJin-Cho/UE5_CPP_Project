@@ -12,6 +12,7 @@ UFindPlayerLocation::UFindPlayerLocation(const FObjectInitializer& ObjectInitial
 	NodeName = TEXT("Find Player Location");
 }
 
+/**플레이어를 발견했으면 Player Location을 갱신하여 쫒아갑니다.*/
 EBTNodeResult::Type UFindPlayerLocation::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	ACharacter* player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);

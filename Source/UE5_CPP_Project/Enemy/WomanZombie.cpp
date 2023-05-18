@@ -2,6 +2,8 @@
 #include "Global.h"
 #include "Engine/SkeletalMesh.h"
 #include "Components/SphereComponent.h"
+
+/**여성형 좀비는 mesh가 다르고 애니메이션도 다르기때문에 CDO 즉 생성자를 통해 다시 정의*/
 AWomanZombie::AWomanZombie()
 {
 	CHelpers::GetAsset<USkeletalMesh>(&Mesh, "SkeletalMesh'/Game/EnemyZombie/WomanZombie/Mesh/ZombieD_V1.ZombieD_V1'");

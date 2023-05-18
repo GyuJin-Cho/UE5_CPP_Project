@@ -1,3 +1,4 @@
+/**좀비와 플레이어와에 거리가 가까워지면 Service를 통해 조건을 변경하여 공격을 할수있게 만드는 Service*/
 #pragma once
 
 #include "CoreMinimal.h"

@@ -1,3 +1,4 @@
+/*플레이어를 찾았으면 쫒아가는 클래스*/
 #pragma once
 
 #include "CoreMinimal.h"

@@ -1,3 +1,4 @@
+/**Zombie에 AIController 여기서 Zombie에 AI를 담당한다.*/
 #pragma once
 
 #include "CoreMinimal.h"

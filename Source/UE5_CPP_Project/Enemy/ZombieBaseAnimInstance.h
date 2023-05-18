@@ -1,3 +1,4 @@
+/**좀비 애니메이션 BP를위한 AnimInstance*/
 #pragma once
 
 #include "CoreMinimal.h"

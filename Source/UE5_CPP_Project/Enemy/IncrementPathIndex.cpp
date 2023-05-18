@@ -11,6 +11,7 @@ UIncrementPathIndex::UIncrementPathIndex(const FObjectInitializer& ObjectInitial
 	NodeName = TEXT("IncrementPathIndex");
 }
 
+/**실직적인 Patrol 함수 patrol을 놓은 레벨에서 한 곳에 도착하면 다른 한곳에 인덱스를 받아 그곳으로 움직이게 한다.*/
 EBTNodeResult::Type UIncrementPathIndex::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	AEnemyAIControllerBase* controller = Cast<AEnemyAIControllerBase>(OwnerComp.GetAIOwner());

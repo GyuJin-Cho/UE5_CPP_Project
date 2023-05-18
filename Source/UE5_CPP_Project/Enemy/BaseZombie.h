@@ -1,3 +1,4 @@
+/**Base Zombie 기본 좀비의 형태*/
 #pragma once
 
 #include "CoreMinimal.h"

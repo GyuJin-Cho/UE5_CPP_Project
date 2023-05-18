@@ -20,17 +20,19 @@ void UStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 }
 
-
+/**Set Move 이동시 true로 변환*/
 void UStatusComponent::SetMove()
 {
 	bCanMove = true;
 }
 
+/**Set Move 정지시 true로 변환*/
 void UStatusComponent::SetStop()
 {
 	bCanMove = false;
 }
 
+/**속도 enum에 따라 속도 변화*/
 void UStatusComponent::SetSpeed(ECharacterSpeed InSpeed)
 {
 	UCharacterMovementComponent* movement = CHelpers::GetComponent<UCharacterMovementComponent>(GetOwner());
@@ -38,26 +40,16 @@ void UStatusComponent::SetSpeed(ECharacterSpeed InSpeed)
 	movement->MaxWalkSpeed = Speed[(int32)InSpeed];
 }
 
+/**체력 회복 함수*/
 void UStatusComponent::AddHealth(float InAmount)
 {
 	Health += InAmount;
 	Health = FMath::Clamp(Health, 0.0f, MaxHealth);
 }
 
+/**공격을 당할시 체력 제거*/
 void UStatusComponent::SubHealth(float InAmount)
 {
 	Health -= InAmount;
 	Health = FMath::Clamp(Health, 0.0f, MaxHealth);
-}
-
-void UStatusComponent::AddStamina(float InAmount)
-{
-	Stamina += InAmount;
-	Stamina = FMath::Clamp(Stamina, 0.0f, MaxStamina);
-}
-
-void UStatusComponent::SubStamina(float InAmount)
-{
-	Stamina -= InAmount;
-	Stamina = FMath::Clamp(Stamina, 0.0f, MaxStamina);
 }

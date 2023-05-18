@@ -1,3 +1,4 @@
+/**PatrolPath의 위치 갱신 클래스이다.*/
 #pragma once
 
 #include "CoreMinimal.h"

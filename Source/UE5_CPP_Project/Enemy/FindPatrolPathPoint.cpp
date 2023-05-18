@@ -9,6 +9,7 @@ UFindPatrolPathPoint::UFindPatrolPathPoint(const FObjectInitializer& ObjectIniti
 	NodeName = TEXT("FindPatrolPathPoint");
 }
 
+/**좀비 에게서 등록된 APatrolPath가 있으면 그 위치를 가져온다.*/
 EBTNodeResult::Type UFindPatrolPathPoint::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	AEnemyAIControllerBase* controller = Cast<AEnemyAIControllerBase>(OwnerComp.GetAIOwner());

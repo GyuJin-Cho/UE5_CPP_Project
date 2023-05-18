@@ -6,7 +6,3 @@ APatrolPath::APatrolPath()
 	PrimaryActorTick.bCanEverTick = true;
 
 }
-
-
-
-

@@ -3,6 +3,7 @@
 #include "Runtime/Core/Public/UObject/NameTypes.h"
 #include "Runtime/Core/Public/Containers/UnrealString.h"
 
+/**블랙보드 Key를 담는 헤더파일 namespace로 정의*/
 namespace bb_Keys
 {
 	TCHAR const* const TargetLocation = TEXT("TargetLocation");

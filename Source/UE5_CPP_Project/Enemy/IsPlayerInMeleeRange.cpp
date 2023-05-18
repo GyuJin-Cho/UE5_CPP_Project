@@ -13,6 +13,7 @@ UIsPlayerInMeleeRange::UIsPlayerInMeleeRange()
 	NodeName = TEXT("IsPlayerInMeleeRange");
 }
 
+/**Player와 가까이 붙으면 실행되는 함수 Player와 좀비의 거리가 설정한 값보다 가까워지면 그 즉시 좀비의 조건을 변경한다.*/
 void UIsPlayerInMeleeRange::OnBecomeRelevant(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	Super::OnBecomeRelevant(OwnerComp, NodeMemory);
