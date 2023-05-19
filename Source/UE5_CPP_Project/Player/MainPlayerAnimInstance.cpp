@@ -13,6 +13,7 @@ void UMainPlayerAnimInstance::NativeBeginPlay()
 
 }
 
+/**ABP 를 위한 이벤트 처리 각 메인 플레이어에 애님 State에 필요한 변수 값들을 갱신후 적용해준다.*/
 void UMainPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);

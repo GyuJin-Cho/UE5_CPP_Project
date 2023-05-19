@@ -1,3 +1,4 @@
+/**GameOverClearWidget Class Clear GameOver 함수들을 BP에서 사용하기 위해 BlueprintImplementableEvent로 설정해준다.*/
 #pragma once
 
 #include "CoreMinimal.h"

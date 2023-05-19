@@ -1,3 +1,4 @@
+/**NULL 이나 True False 체크를 해주는 define 모음*/
 #pragma once
 
 #define CheckNull(p) { if (p == nullptr) return; }

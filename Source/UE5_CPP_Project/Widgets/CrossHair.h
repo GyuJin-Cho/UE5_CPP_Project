@@ -1,3 +1,4 @@
+/**CrossHair Widget Class*/
 #pragma once
 
 #include "CoreMinimal.h"

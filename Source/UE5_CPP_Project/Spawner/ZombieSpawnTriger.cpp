@@ -7,6 +7,8 @@
 #include "Player/MainPlayer.h"
 #include "Enemy/WomanZombie.h"
 #include "Widgets/MainHudWidget.h"
+
+/**ZombieSpawnTriger 생성자 CDO를 통해 Component 부착 및 좀비들의 BP들을 가져온다.*/
 AZombieSpawnTriger::AZombieSpawnTriger()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -17,6 +19,7 @@ AZombieSpawnTriger::AZombieSpawnTriger()
 	CHelpers::GetClass<AWomanZombie>(&WomanZombie, "Blueprint'/Game/EnemyZombie/WomanZombie/WomanZombie_BP.WomanZombie_BP_C'");
 }
 
+/**게임 시작후 Box Collision에 이벤트 바인딩*/
 void AZombieSpawnTriger::BeginPlay()
 {
 	Super::BeginPlay();
@@ -31,6 +34,8 @@ void AZombieSpawnTriger::Tick(float DeltaTime)
 
 }
 
+/**Player와 Overlap이 됬을경우 등록된 ZombieSpawners들을 Spawn한다 Type은 FMath를 사용하여 랜덤하게 Spawn한다.*/
+/**그이후 SpawnTriger를 제거한다.*/
 void AZombieSpawnTriger::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {

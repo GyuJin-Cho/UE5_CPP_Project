@@ -5,6 +5,8 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Enemy/BaseZombie.h"
 #include "Engine/EngineTypes.h"
+
+/**생성자를 통해 CDO를 만들고 Component 및 Mesh인 총알 장착*/
 AM4Projectile::AM4Projectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,6 +23,7 @@ AM4Projectile::AM4Projectile()
 	Mesh->SetRelativeScale3D(FVector(7.0f, 7.0f, 7.0f));
 }
 
+/**게임 시작시 OnHit함수를 이벤트 바인딩*/
 void AM4Projectile::BeginPlay()
 {
 	Super::BeginPlay();
@@ -35,6 +38,8 @@ void AM4Projectile::Tick(float DeltaTime)
 
 }
 
+/**총알이 생성되어 좀비에게 맞을경우 데미지를 준다.*/
+/**다만 좀비의 BoneName이 Head_M 즉 머리를 맞출경우 더 강력한 데미지를 준다.*/
 void AM4Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 

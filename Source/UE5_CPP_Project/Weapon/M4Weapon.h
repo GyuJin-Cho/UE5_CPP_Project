@@ -1,3 +1,4 @@
+/**M4Weapon Class*/
 #pragma once
 
 #include "CoreMinimal.h"

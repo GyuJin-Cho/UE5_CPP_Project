@@ -1,3 +1,4 @@
+/**Zombie Spawner Class 좀비를 이 액터에 위치에 스폰한다.*/
 #pragma once
 
 #include "CoreMinimal.h"

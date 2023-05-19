@@ -11,6 +11,8 @@
 #include "Camera/CameraComponent.h"
 #include "Weapon/M4Projectile.h"
 #include "Engine/World.h"
+
+/**무기 생성자 Component를 생성하고 AnimAsset을 가져온다, 총알도 가져온다.*/
 AM4Weapon::AM4Weapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -39,10 +41,10 @@ void AM4Weapon::Tick(float DeltaTime)
 
 }
 
+/**Player가 Aim을 활성화 상태에서 총을 발포할경우 들어오는 함수 Muzzle 부분에서 파티클을 실행하여 불꽃이 튀기도록 만든다.*/
+/**또한, Projectile을 카메라 조준점 에 생성되도록 설정한다.*/
 void AM4Weapon::Fire(AMainPlayer* Player)
 {
-	//Mesh->PlayAnimation(FireAnimation,false);
-
 	if(Armo->GetArmo()!=0)
 	{
 		ShellEject->Activate(true);
@@ -60,6 +62,7 @@ void AM4Weapon::Fire(AMainPlayer* Player)
 	}
 	
 }
+
 
 void AM4Weapon::SetArmo()
 {

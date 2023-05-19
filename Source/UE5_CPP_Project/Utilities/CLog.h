@@ -1,3 +1,4 @@
+/**CLogClass 게임상에 디스플레이에 출력을 원하거나 Log를찍기위해 편하게 만듬 */
 #pragma once
 
 #include "CoreMinimal.h"

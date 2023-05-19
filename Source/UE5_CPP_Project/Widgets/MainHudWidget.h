@@ -1,3 +1,4 @@
+/**MainHudWidget Class BP를 활용하기 위해 전 함수 BlueprintImplementableEvent를 설정해주고 BP에서 정의해준다.*/
 #pragma once
 
 #include "CoreMinimal.h"

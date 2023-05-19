@@ -1,3 +1,4 @@
+/**MenuWidget Class 처음 로비을 위해 만든 Widget. BP에서 생성한다.*/
 #pragma once
 
 #include "CoreMinimal.h"

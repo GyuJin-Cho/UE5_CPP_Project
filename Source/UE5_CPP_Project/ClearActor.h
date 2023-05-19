@@ -1,3 +1,4 @@
+/**ClearActor Class*/
 #pragma once
 
 #include "CoreMinimal.h"

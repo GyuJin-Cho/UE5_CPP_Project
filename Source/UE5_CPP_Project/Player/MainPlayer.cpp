@@ -24,6 +24,8 @@
 #include "Engine/CollisionProfile.h"
 #include "Engine/Engine.h"
 #include "Sound/SoundCue.h"
+
+/**Player 에 생성자 CDO를 통해 Component 및 Asset등을 가져오는 작업을 한다.*/
 AMainPlayer::AMainPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -70,6 +72,7 @@ AMainPlayer::AMainPlayer()
 	SetupStimulus();
 }
 
+/**게임이 시작되면 초기화 해줄 함수 위젯과 무기 장착을 주로 해준다.*/
 void AMainPlayer::BeginPlay()
 {
 	Super::BeginPlay();
@@ -117,6 +120,7 @@ void AMainPlayer::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+/**플레이어 캐릭터에 키 입력을 등록하는 함수입니다. 액션, 축 입력이 있습니다.*/
 void AMainPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -141,6 +145,7 @@ void AMainPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("PauseMenu", EInputEvent::IE_Pressed, this, &AMainPlayer::PuaseMenuOn).bExecuteWhenPaused = true;
 }
 
+/**앞 뒤 움직을 담당하는 함수입니다. 뒤로 움직임이 있을경우 뛰질 못하고 죽으면 움직이 못하게 막았습니다.*/
 void AMainPlayer::OnMoveForward(float InAxis)
 {
 	if(InAxis<0)
@@ -163,6 +168,7 @@ void AMainPlayer::OnMoveForward(float InAxis)
 
 }
 
+/**좌 우 움직이는 함수입니다. 똑같이 죽으면 움직이지 못하게 만들었습니다.*/
 void AMainPlayer::OnMoveRight(float InAxis)
 {
 	
@@ -176,6 +182,7 @@ void AMainPlayer::OnMoveRight(float InAxis)
 
 }
 
+/**수평 움직임을 담당하는 함수입니다. 마우스 좌 우를 이동할때마다 Yaw의 방향을 변경합니다.*/
 void AMainPlayer::OnHorizontalLook(float InAxis)
 {
 	if (State->IsDeadMode())
@@ -184,6 +191,7 @@ void AMainPlayer::OnHorizontalLook(float InAxis)
 	AddControllerYawInput(InAxis * rate * GetWorld()->GetDeltaSeconds());
 }
 
+/**수직 움직임을 담당하는 함수입니다. 마우스가 위 아래를 이동할때마다 Pitch의 방향을 변경합니다.*/
 void AMainPlayer::OnVerticalLook(float InAxis)
 {
 	if (State->IsDeadMode())
@@ -192,6 +200,7 @@ void AMainPlayer::OnVerticalLook(float InAxis)
 	AddControllerPitchInput(InAxis * rate * GetWorld()->GetDeltaSeconds());
 }
 
+/**Jump 함수입니다 Space를 사용합니다.*/
 void AMainPlayer::Jump()
 {
 	if (State->IsDeadMode())
@@ -199,6 +208,7 @@ void AMainPlayer::Jump()
 	ACharacter::Jump();
 }
 
+/**Jump가 끝날때 있는 함수입니다.*/
 void AMainPlayer::JumpEnd()
 {
 	if (State->IsDeadMode())
@@ -206,6 +216,7 @@ void AMainPlayer::JumpEnd()
 	ACharacter::Jump();
 }
 
+/**Shift 키를 눌러 Sprint 모드로 변경해줍니다. 조준모드, 죽을때, 뒤로 걸을때 사용이 불가능 하며 Status를 통해 속도를 600으로 만들어줍니다.*/
 void AMainPlayer::Sprint()
 {
 	if (IsBackMoving)
@@ -222,6 +233,7 @@ void AMainPlayer::Sprint()
 	
 }
 
+/**Sprint 모드를 종료했을때 다시 속도 400으로 변경해줍니다.*/
 void AMainPlayer::SprintEnd()
 {
 	if (IsBackMoving)
@@ -237,6 +249,9 @@ void AMainPlayer::SprintEnd()
 	}
 }
 
+/**Aim 함수 사용자가 오른쪽 마우스 버튼을 누르고있으면 작동*/
+/**SpringArm을 앞으로 땡기고 CrossHairWidget을 Visible상태로 만들어 사격 준비 태세를 한다.*/
+/**Spring Arm을 앞으로 땡기면 그 자식 Component인 카메라도 같이 앞으로 땡겨진다.*/
 void AMainPlayer::Aim()
 {
 	if (IsSprint||State->IsDeadMode())
@@ -251,6 +266,9 @@ void AMainPlayer::Aim()
 	
 }
 
+/**Aim을 끄는 함수 마우스 오른쪽 버튼을 풀면 꺼진다.*/
+/**그럼 SpringArm은 다시 원상태로 돌아온다.*/
+/**Spring Arm을 다시 원상태로 돌리면 그 자식 Component인 카메라도 같이 원상태로 돌아온다.*/
 void AMainPlayer::AimEnd()
 {
 	if (State->IsDeadMode())
@@ -267,6 +285,8 @@ void AMainPlayer::AimEnd()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 
+/**B키를 눌러 총을 연발 및 단발로 변경하는 함수*/
+/**MainHud에 Auto Single 이라는 단어로 표현*/
 void AMainPlayer::Auto()
 {
 	if (State->IsDeadMode())
@@ -291,6 +311,7 @@ void AMainPlayer::AutoEnd()
 {
 }
 
+/**마우스 왼쪽 클릭할때 총을 발포하는 함수 Aim모드가 켜져있어야 활성화*/
 void AMainPlayer::Action()
 {
 	if (State->IsDeadMode())
@@ -302,6 +323,7 @@ void AMainPlayer::Action()
 	}
 }
 
+/**마우스 왼쪽을 땔떼 활성화되는 함수 RifleFireTimer는 만약 연사 모드일경우 Timer를 설정해놓은것을 Clear해줘야한다.*/
 void AMainPlayer::ActionEnd()
 {
 	if (State->IsDeadMode())
@@ -314,6 +336,7 @@ void AMainPlayer::ActionEnd()
 	}
 }
 
+/**Reload 함수 R키를 누르고 재장전을 시도한다. 만약 총알이 가득차있는데 재장전을 시도하면 애니메이션이 재생이 안된다.*/
 void AMainPlayer::Reload()
 {
 	if (State->IsDeadMode())
@@ -329,6 +352,7 @@ void AMainPlayer::Reload()
 	}
 }
 
+/**Notify를 통해 탄창이 총에 장착되는 순간 함수를 실행하여 총알을 끝까지 채운다.*/
 void AMainPlayer::ReloadAction()
 {
 	if (State->IsDeadMode())
@@ -338,6 +362,7 @@ void AMainPlayer::ReloadAction()
 	M4WeaponActor->SetArmo();
 }
 
+/**총알의 반동 총을 발포할때마다 랜덤으로 Pitch와 Yaw를 올리거나 내린다.*/
 void AMainPlayer::Recoil()
 {
 	float PitchRecoil = 0.5f;
@@ -350,6 +375,7 @@ void AMainPlayer::Recoil()
 	AddControllerYawInput(YawRecoil * YawRandom);
 }
 
+/**Zombie에 AI가 Player에게 반응해도록 설정하는 함수*/
 void AMainPlayer::SetupStimulus()
 {
 	
@@ -359,6 +385,7 @@ void AMainPlayer::SetupStimulus()
 	Stimulus->RegisterWithPerceptionSystem();
 }
 
+/**Zombie가 총의 사운드를 들었을때 반응하도록 만드는 함수*/
 void AMainPlayer::OnDistract()
 {
 	if(DistractionSound)
@@ -369,6 +396,9 @@ void AMainPlayer::OnDistract()
 	}
 }
 
+/**실질적인 총을 발포하는 함수 연발일 경우 Timer를 설정하여 0.1초마다 재귀함수를 통해 계속 발포하게 만듬*/
+/**또한 OnDistract를 호출하여 좀비가 반응하도록 설정*/
+/**m4Weapon이라는 총에 Fire함수를 호출하고 Argument로 자기자신인 this를 넘겨줌*/
 void AMainPlayer::Fire()
 {
 	if (State->IsDeadMode())
@@ -397,6 +427,7 @@ void AMainPlayer::Fire()
 	}
 }
 
+/**무기 장착 Player Skeletal Mesh 안에 소켓을 만들어 장착한다.*/
 void AMainPlayer::Equip()
 {
 	if (M4WeaponActor)
@@ -416,6 +447,7 @@ void AMainPlayer::Equip()
 	}
 }
 
+/**ESC를 눌러 일시정지후 Pause Menu를 부른다.*/
 void AMainPlayer::PuaseMenuOn()
 {
 	
@@ -437,6 +469,7 @@ void AMainPlayer::PuaseMenuOn()
 	
 }
 
+/**좀비에게 데미지를 입으면 활성화되는 함수 좀비에 공격력 만큼 체력을 감소시킨다.*/
 float AMainPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
                               AActor* DamageCauser)
 {
@@ -457,6 +490,7 @@ float AMainPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	return DamageAmount;
 }
 
+/**Die 함수 죽음과 동시에 Game Over Widget을 Visible 해주고 죽는 소리를 실행한다.*/
 void AMainPlayer::Die()
 {
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -473,6 +507,7 @@ void AMainPlayer::FinalDeath()
 	//todo
 }
 
+/**최종적으로 게임을 완수했을때 실행되는 함수*/
 void AMainPlayer::Clear()
 {
 	GameOverClearWidget->SetVisibility(ESlateVisibility::Visible);

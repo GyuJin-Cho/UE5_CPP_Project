@@ -5,6 +5,7 @@
 #include "Weapon/M4Weapon.h"
 #include "Widgets/GameOverClearWidget.h"
 
+/**생성자 BoxCollision Component를 CDO중에 부착한다.*/
 AClearActor::AClearActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -13,6 +14,7 @@ AClearActor::AClearActor()
 	
 }
 
+/**게임 시작중에 Box를 이벤트 바인딩 한다.*/
 void AClearActor::BeginPlay()
 {
 	Super::BeginPlay();
@@ -25,6 +27,7 @@ void AClearActor::Tick(float DeltaTime)
 
 }
 
+/**목적지까지 가면 이 BoxCollision에 밟혀 게임을 정상적으로 완수할수 있다.*/
 void AClearActor::OnBeginOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {

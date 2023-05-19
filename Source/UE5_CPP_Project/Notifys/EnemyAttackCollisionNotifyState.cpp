@@ -6,6 +6,7 @@ FString UEnemyAttackCollisionNotifyState::GetNotifyName_Implementation() const
 	return "EnemyAttackCollision";
 }
 
+/**Notify 시작점 Zombie 의 공격(공격 애니메이션 활성)시 Collision On*/
 void UEnemyAttackCollisionNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	float TotalDuration)
 {
@@ -24,6 +25,7 @@ void UEnemyAttackCollisionNotifyState::NotifyBegin(USkeletalMeshComponent* MeshC
 		zombie->CollisionOn();
 }
 
+/**Notify 끝점 Zombie 의 공격이 끝날(공격 애니메이션 종료)시 Collision Off*/
 void UEnemyAttackCollisionNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
 	Super::NotifyEnd(MeshComp, Animation);
