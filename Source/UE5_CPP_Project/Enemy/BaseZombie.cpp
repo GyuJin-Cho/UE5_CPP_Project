@@ -109,7 +109,7 @@ void ABaseZombie::Die()
 	}
 
 	AMainPlayer* MainPlayer =Cast<AMainPlayer>( UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
+	
 	if(MainPlayer)
 	{
 		const int EnemyCount = -1;

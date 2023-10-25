@@ -500,6 +500,7 @@ void AMainPlayer::Die()
 	if(DeathSound)
 		UGameplayStatics::PlaySound2D(GetWorld(), DeathSound, 1.0f, 1.0f);
 	State->SetDeadMode();
+
 }
 
 void AMainPlayer::FinalDeath()
