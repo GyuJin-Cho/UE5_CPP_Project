@@ -1,0 +1,96 @@
+#include "Player/MainPlayer.h"
+#include "Global.h"
+#include "Widgets/CrossHair.h"
+#include "Widgets/MainHudWidget.h"
+#include "Widgets/PauseMenu.h"
+#include "Widgets/GameOverClearWidget.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PlayerController.h"
+#include "Camera/CameraComponent.h"
+#include "Components/ArmoComponent.h"
+#include "Engine/SkeletalMeshSocket.h"
+#include "Weapon/M4Weapon.h"
+#include "Components/StatusComponent.h"
+#include "Components/StateComponent.h"
+#include "Math/UnrealMathUtility.h"
+#include "GameFramework/Controller.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense_Sight.h"
+#include "Perception/AISense_Hearing.h"
+#include "Enemy/AI_Tags.h"
+#include "Engine/CollisionProfile.h"
+#include "Engine/Engine.h"
+#include "Sound/SoundCue.h"
+
+/**Player 에 생성자 CDO를 통해 Component 및 Asset등을 가져오는 작업을 한다.*/
+AMainPlayer::AMainPlayer()
+{
+	PrimaryActorTick.bCanEverTick = true;
+
+	CHelpers::CreateComponent(this, &SpringArm, "SpringArm", GetMesh());
+	CHelpers::CreateComponent(this, &Camera, "Camera", SpringArm);
+	CHelpers::CreateActorComponent(this, &Status, "Status");
+	CHelpers::CreateActorComponent(this, &State, "State");
+
+	GetMesh()->SetRelativeLocation(FVector(0, 0, -88));
+	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
+
+	USkeletalMesh* mesh;
+	CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/SCK_Casual01/Models/Premade_Characters/MESH_PC_02.MESH_PC_02'");
+	GetMesh()->SetSkeletalMesh(mesh);
+	
+	TSubclassOf<UAnimInstance> animInstance;
+	CHelpers::GetClass<UAnimInstance>(&animInstance, "AnimBlueprint'/Game/Player/ABP_IK/ABP_MainPlayer.ABP_MainPlayer_C'");
+	GetMesh()->SetAnimInstanceClass(animInstance);
+
+	SpringArm->SetRelativeLocation(FVector(0, 0, 140));
+	SpringArm->SetRelativeRotation(FRotator(0, 90, 0));
+	SpringArm->TargetArmLength = 300.0f;
+	SpringArm->bDoCollisionTest = false;
+	SpringArm->bUsePawnControlRotation = true;
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
+
+	GetCapsuleComponent()->SetCapsuleHalfHeight(94.0f);
+	GetCapsuleComponent()->SetCapsuleRadius(42.0f);
+
+	//Widgets
+	CHelpers::GetClass<UCrossHair>(&CrossHairWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/CrossHair.CrossHair_C'");
+	CHelpers::GetClass<UMainHudWidget>(&MainHudWidgetClass, "WidgetBlueprint'/Game/Player/Widgets/MainHudWidget.MainHudWidget_C'");
+	CHelpers::GetClass<UPauseMenu>(&PauseMenuWidgetClass, "WidgetBlueprint'/Game/PauseMenu/PauseMenuWidget.PauseMenuWidget_C'");
+	CHelpers::GetClass<UGameOverClearWidget>(&GameOverClearWidgetClass, "WidgetBlueprint'/Game/GameOverClearWidgets/GameOverClearWidget_BP.GameOverClearWidget_BP_C'");
+
+	//Montage
+	CHelpers::GetAsset<UAnimMontage>(&FireMontage, "AnimMontage'/Game/Player/Animation/Fire/TPP_VG_Fire_Normal_Anim_Montage.TPP_VG_Fire_Normal_Anim_Montage'");
+	CHelpers::GetAsset<UAnimMontage>(&ReloadMontage, "AnimMontage'/Game/Player/Animation/Action/TPP_HG_Reload_30Mag_Anim_Montage.TPP_HG_Reload_30Mag_Anim_Montage'");
+	CHelpers::GetAsset<UAnimMontage>(&EmptyFire, "AnimMontage'/Game/Player/Animation/Fire/TPP_VG_Fire_Empty_Anim_Montage.TPP_VG_Fire_Empty_Anim_Montage'");
+
+	SetupStimulus();
+}
+
+/**게임이 시작되면 초기화 해줄 함수 위젯과 무기 장착을 주로 해준다.*/
+void AMainPlayer::BeginPlay()
+{
+	Super::BeginPlay();
+	if(CrossHairWidgetClass)
+	{
+		CrossHairWidgets = CreateWidget<UCrossHair>(GetWorld(), CrossHairWidgetClass);
+		CrossHairWidgets->AddToViewport();
+		CrossHairWidgets->SetVisibility(ESlateVisibility::Hidden);
+	}
+
+	if(MainHudWidgetClass)
+	{
+		MainHudWidget = CreateWidget<UMainHudWidget>(GetWorld(), MainHudWidgetClass);
+		MainHudWidget->AddToViewport();
+		MainHudWidget->HealthUpdate(MaxHealth, MaxHealth);
+	}
+
+	if(PauseMenuWidgetClass)
+	{
+		PauseMenuWidget = CreateWidget<UPauseMenu>(GetWorld(), PauseMenuWidgetClass);
+		
