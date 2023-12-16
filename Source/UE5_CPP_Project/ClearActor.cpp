@@ -2,6 +2,7 @@
 #include "Global.h"
 #include "Components/BoxComponent.h"
 #include "Player/MainPlayer.h"
+#include "Enemy/BaseZombie.h"
 #include "Weapon/M4Weapon.h"
 #include "Widgets/GameOverClearWidget.h"
 
@@ -27,12 +28,15 @@ void AClearActor::Tick(float DeltaTime)
 
 }
 
-/**목적지까지 가면 이 BoxCollision에 밟혀 게임을 정상적으로 완수할수 있다.*/
+/**목적지까지 가면 이 BoxCollision에 밟혀 게임이 만약 마지막 스테이지면 클리어 아니면 다음 레벨*/
+/**좀비들을 다 죽여야 한다.*/
 void AClearActor::OnBeginOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	AMainPlayer* player = Cast<AMainPlayer>(OtherActor);
-	if(player == UGameplayStatics::GetPlayerCharacter(GetWorld(),0))
+	TArray<AActor*> Zombies;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABaseZombie::StaticClass(), Zombies);
+	if(player == UGameplayStatics::GetPlayerCharacter(GetWorld(),0)&&Zombies.IsEmpty())
 	{
 		player->Clear();
 	}
