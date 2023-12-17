@@ -145,6 +145,15 @@ void AMainPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("PauseMenu", EInputEvent::IE_Pressed, this, &AMainPlayer::PuaseMenuOn).bExecuteWhenPaused = true;
 }
 
+/**다음 레벨진입*/
+void AMainPlayer::NextLevel()
+{
+	if (Level == EStateTLevel::Level1)
+		Level = EStateTLevel::Level2;
+	else if(Level == EStateTLevel::Level2)
+		Level = EStateTLevel::MAX;
+}
+
 /**앞 뒤 움직을 담당하는 함수입니다. 뒤로 움직임이 있을경우 뛰질 못하고 죽으면 움직이 못하게 막았습니다.*/
 void AMainPlayer::OnMoveForward(float InAxis)
 {

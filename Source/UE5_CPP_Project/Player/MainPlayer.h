@@ -5,11 +5,18 @@
 #include "GameFramework/Character.h"
 #include "Sound/SoundBase.h"
 #include "MainPlayer.generated.h"
-
+UENUM(BlueprintType)
+enum class EStateTLevel : uint8
+{
+	Level1,Level2,MAX
+};
 UCLASS()
 class UE5_CPP_PROJECT_API AMainPlayer : public ACharacter
 {
 	GENERATED_BODY()
+
+private:
+	EStateTLevel Level;
 public:
 	bool IsSprint;
 	bool IsAuto;
@@ -103,6 +110,10 @@ public:
 	FORCEINLINE UStateComponent* GetState() { return State; }
 	FORCEINLINE UCameraComponent* GetCamera() { return Camera; }
 	FORCEINLINE UMainHudWidget* GetMainHudWidget() { return MainHudWidget; }
+	FORCEINLINE EStateTLevel GetStateLevel() { return Level; }
+// Level Type Chagne
+public:
+	void NextLevel();
 private:
 	void OnMoveForward(float InAxis);
 	void OnMoveRight(float InAxis);

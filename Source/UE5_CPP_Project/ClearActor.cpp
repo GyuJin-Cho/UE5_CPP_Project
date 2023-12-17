@@ -38,7 +38,16 @@ void AClearActor::OnBeginOverlapEnd(UPrimitiveComponent* OverlappedComponent, AA
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABaseZombie::StaticClass(), Zombies);
 	if(player == UGameplayStatics::GetPlayerCharacter(GetWorld(),0)&&Zombies.IsEmpty())
 	{
-		player->Clear();
+		player->NextLevel();
+		if(player->GetStateLevel() == EStateTLevel::Level2)
+		{
+			player->Clear();
+		}
+		else if(player->GetStateLevel()==EStateTLevel::MAX)
+		{
+			player->Clear();
+		}
+
 	}
 }
 
