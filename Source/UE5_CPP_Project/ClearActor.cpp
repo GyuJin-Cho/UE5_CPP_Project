@@ -41,7 +41,8 @@ void AClearActor::OnBeginOverlapEnd(UPrimitiveComponent* OverlappedComponent, AA
 		player->NextLevel();
 		if(player->GetStateLevel() == EStateTLevel::Level2)
 		{
-			player->Clear();
+			FName level = "L_greek_island";
+			UGameplayStatics::OpenLevel(GetWorld(), level);
 		}
 		else if(player->GetStateLevel()==EStateTLevel::MAX)
 		{
