@@ -65,9 +65,9 @@ void AZombieSpawnTriger::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent
 			}
 		}
 		UMainHudWidget* Hud = player->GetMainHudWidget();
-		if(Hud)
+		if (Hud)
 		{
-			Hud->SetEnemyCount(ZombieSpawners.Num(),false);
+			Hud->SetEnemyCount(ZombieSpawners.Num(), false);
 		}
 		Destroy();
 	}
