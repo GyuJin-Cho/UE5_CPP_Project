@@ -30,4 +30,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void SetEnemyCount(int EnemyCount, bool IsDeath);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void SetTargetText(const FString& Text);
 };

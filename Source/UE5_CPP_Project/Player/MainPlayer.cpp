@@ -24,6 +24,7 @@
 #include "Engine/CollisionProfile.h"
 #include "Engine/Engine.h"
 #include "Sound/SoundCue.h"
+#include "UE5_CPP_ProjectGameInstance.h"
 
 /**Player 에 생성자 CDO를 통해 Component 및 Asset등을 가져오는 작업을 한다.*/
 AMainPlayer::AMainPlayer()
@@ -76,6 +77,11 @@ AMainPlayer::AMainPlayer()
 void AMainPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+	UUE5_CPP_ProjectGameInstance* instance = Cast<UUE5_CPP_ProjectGameInstance>(GetGameInstance());
+	if (instance)
+	{
+		Level = instance->GetLevel();
+	}
 	if(CrossHairWidgetClass)
 	{
 		CrossHairWidgets = CreateWidget<UCrossHair>(GetWorld(), CrossHairWidgetClass);
@@ -88,6 +94,14 @@ void AMainPlayer::BeginPlay()
 		MainHudWidget = CreateWidget<UMainHudWidget>(GetWorld(), MainHudWidgetClass);
 		MainHudWidget->AddToViewport();
 		MainHudWidget->HealthUpdate(MaxHealth, MaxHealth);
+		
+		if (Level == EStateTLevel::Level1)
+			MainHudWidget->SetTargetText("Get rid of <Awesome>all the </><Awesome>zombies</>"
+								"{/n}Go to <Red>stone statues </>");
+		else if(Level==EStateTLevel::Level2)
+			MainHudWidget->SetTargetText("Get to the <Awesome>arrow</>and get to the"
+								"{/n}<Awesome>Stone Statue</>while annihilating the "
+								"{/n}<Red>zombies</> ");
 	}
 
 	if(PauseMenuWidgetClass)
@@ -152,6 +166,8 @@ void AMainPlayer::NextLevel()
 		Level = EStateTLevel::Level2;
 	else if(Level == EStateTLevel::Level2)
 		Level = EStateTLevel::MAX;
+	UUE5_CPP_ProjectGameInstance* instance = Cast<UUE5_CPP_ProjectGameInstance>(GetGameInstance());
+	instance->SetLevel(Level);
 }
 
 /**앞 뒤 움직을 담당하는 함수입니다. 뒤로 움직임이 있을경우 뛰질 못하고 죽으면 움직이 못하게 막았습니다.*/
