@@ -45,23 +45,26 @@ void AZombieSpawnTriger::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent
 		for (int i = 0; i < ZombieSpawners.Num(); i++)
 		{
 			int32 ZombieTypeNum = FMath::RandRange(MinRange, MaxRange);
-			switch (ZombieTypeNum)
+			if(ZombieSpawners[i])
 			{
-			case 0:
-			{
-				GetWorld()->SpawnActor<ABaseZombie>(BaseZombie, ZombieSpawners[i]->GetTransform());
-				break;
-			}
-			case 1:
-			{
-				GetWorld()->SpawnActor<ABaseZombie>(ManZombie, ZombieSpawners[i]->GetTransform());
-				break;
-			}
-			case 2:
-			{
-				GetWorld()->SpawnActor<ABaseZombie>(WomanZombie, ZombieSpawners[i]->GetTransform());
-				break;
-			}
+				switch (ZombieTypeNum)
+				{
+				case 0:
+				{
+					GetWorld()->SpawnActor<ABaseZombie>(BaseZombie, ZombieSpawners[i]->GetTransform());
+					break;
+				}
+				case 1:
+				{
+					GetWorld()->SpawnActor<ABaseZombie>(ManZombie, ZombieSpawners[i]->GetTransform());
+					break;
+				}
+				case 2:
+				{
+					GetWorld()->SpawnActor<ABaseZombie>(WomanZombie, ZombieSpawners[i]->GetTransform());
+					break;
+				}
+				}
 			}
 		}
 		UMainHudWidget* Hud = player->GetMainHudWidget();
