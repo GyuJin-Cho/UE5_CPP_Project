@@ -250,6 +250,8 @@ void AMainPlayer::Sprint()
 		return;
 	if (State->IsAimMode())
 		return;
+	if (State->IsFireMode())
+		return;
 	if(Status->CanMove())
 	{
 		IsSprint = true;
