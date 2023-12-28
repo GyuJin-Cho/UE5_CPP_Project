@@ -252,6 +252,8 @@ void AMainPlayer::Sprint()
 		return;
 	if (State->IsFireMode())
 		return;
+	if (RifleFireTimer.IsValid())
+		GetWorldTimerManager().ClearTimer(RifleFireTimer);
 	if(Status->CanMove())
 	{
 		IsSprint = true;
@@ -269,6 +271,7 @@ void AMainPlayer::SprintEnd()
 		return;
 	if (State->IsAimMode())
 		return;
+	
 	if (Status->CanMove())
 	{
 		IsSprint = false;
@@ -302,6 +305,8 @@ void AMainPlayer::AimEnd()
 		return;
 	if (IsSprint)
 		return;
+	if (IsAuto)
+		GetWorldTimerManager().ClearTimer(RifleFireTimer);
 	CrossHairWidgets->SetVisibility(ESlateVisibility::Hidden);
 	State->SetIdleMode();
 	IsAim = false;
