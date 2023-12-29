@@ -254,7 +254,8 @@ void AMainPlayer::Sprint()
 		return;
 	if (RifleFireTimer.IsValid())
 		GetWorldTimerManager().ClearTimer(RifleFireTimer);
-	if(Status->CanMove())
+	float speed = GetVelocity().Length();
+	if(Status->CanMove()&&speed>0.0f)
 	{
 		IsSprint = true;
 		Status->SetSpeed(ECharacterSpeed::Sprint);
