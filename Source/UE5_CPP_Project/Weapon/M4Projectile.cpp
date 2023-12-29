@@ -28,7 +28,6 @@ void AM4Projectile::BeginPlay()
 {
 	Super::BeginPlay();
 	SphereCollision->OnComponentHit.AddDynamic(this, &AM4Projectile::OnHit);
-
 	
 }
 
@@ -47,13 +46,14 @@ void AM4Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPri
 	ABaseZombie* Zombie = Cast<ABaseZombie>(OtherActor);
 	CheckNull(Zombie);
 	FDamageEvent e;
-	if(Hit.BoneName==FName("Head_M"))
+	if(Hit.BoneName==FName("Head_M")||Hit.BoneName==FName("HeadEnd_M"))
 	{
-		Zombie->TakeDamage(50.0f, e, UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+		CLog::Print("HeadShot");
+		Zombie->TakeDamage(Damage*5.0f, e, UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
 	}
 	else
 	{
-		Zombie->TakeDamage(10.0f, e, UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+		Zombie->TakeDamage(Damage, e, UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
 	}
 	Destroy();
 }

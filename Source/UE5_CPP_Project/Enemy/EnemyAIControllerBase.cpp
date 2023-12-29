@@ -17,7 +17,7 @@
 #include "AI_Tags.h"
 #include "GameFramework/Character.h"
 
-/**CDO 를통해 BT, BTComponent, BBComponent를 생성한다.*/
+/**CDO을 통해 BT, BTComponent, BBComponent를 생성 및 총소리 및 플레이어의 탐지 거리여부를 조정하는 생성자.*/
 AEnemyAIControllerBase::AEnemyAIControllerBase(const FObjectInitializer& ObjectInitializer)
 {
 	CHelpers::GetAsset<UBehaviorTree>(&BehaviorTree, "BehaviorTree'/Game/EnemyZombie/ZombieBase/AI/Behavior/BT.BT'");
@@ -25,7 +25,37 @@ AEnemyAIControllerBase::AEnemyAIControllerBase(const FObjectInitializer& ObjectI
 	CHelpers::CreateActorComponent<UBehaviorTreeComponent>(this,&BTC, "BehaviorTreeComponent");
 	CHelpers::CreateActorComponent<UBlackboardComponent>(this, &BBC, "BlackBoardComponent");
 
-	SetupPerceptionSystem();
+	/*SetupPerceptionSystem();*/
+
+	CHelpers::CreateActorComponent<UAISenseConfig_Sight>(this, &Sight, "Sight Config");
+	if (Sight)
+	{
+		SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component")));
+		Sight->SightRadius = 500.0f;
+		Sight->LoseSightRadius = Sight->SightRadius + 25.0f;
+		Sight->PeripheralVisionAngleDegrees = 90.0f;
+		Sight->SetMaxAge(5.0f);
+		Sight->AutoSuccessRangeFromLastSeenLocation = 520.0f;
+		Sight->DetectionByAffiliation.bDetectEnemies = true;
+		Sight->DetectionByAffiliation.bDetectFriendlies = true;
+		Sight->DetectionByAffiliation.bDetectNeutrals = true;
+
+		GetPerceptionComponent()->SetDominantSense(*Sight->GetSenseImplementation());
+		GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyAIControllerBase::OnTargetDetected);
+		GetPerceptionComponent()->ConfigureSense(*Sight);
+	}
+
+	CHelpers::CreateActorComponent<UAISenseConfig_Hearing>(this, &HearingConfig, "Hearing Config");
+	if (HearingConfig)
+	{
+		HearingConfig->HearingRange = 3000.0f;
+		HearingConfig->DetectionByAffiliation.bDetectEnemies =
+			HearingConfig->DetectionByAffiliation.bDetectFriendlies =
+			HearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
+
+		GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyAIControllerBase::OnTargetDetected);
+		GetPerceptionComponent()->ConfigureSense(*HearingConfig);
+	}
 
 }
 
@@ -84,36 +114,7 @@ void AEnemyAIControllerBase::OnUpdated(TArray<AActor*> const& UpdatedActors)
 	}
 }
 
-/**총소리 및 플레이어의 탐지 거리여부를 조정하는 함수이다.*/
-void AEnemyAIControllerBase::SetupPerceptionSystem()
-{
-	CHelpers::CreateActorComponent<UAISenseConfig_Sight>(this, &Sight, "Sight Config");
-	if(Sight)
-	{
-		SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component")));
-		Sight->SightRadius = 500.0f;
-		Sight->LoseSightRadius = Sight->SightRadius + 25.0f;
-		Sight->PeripheralVisionAngleDegrees = 90.0f;
-		Sight->SetMaxAge(5.0f);
-		Sight->AutoSuccessRangeFromLastSeenLocation = 520.0f;
-		Sight->DetectionByAffiliation.bDetectEnemies = true;
-		Sight->DetectionByAffiliation.bDetectFriendlies = true;
-		Sight->DetectionByAffiliation.bDetectNeutrals = true;
+//void AEnemyAIControllerBase::SetupPerceptionSystem()
+//{
+//}
 
-		GetPerceptionComponent()->SetDominantSense(*Sight->GetSenseImplementation());
-		GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyAIControllerBase::OnTargetDetected);
-		GetPerceptionComponent()->ConfigureSense(*Sight);
-	}
-
-	CHelpers::CreateActorComponent<UAISenseConfig_Hearing>(this, &HearingConfig, "Hearing Config");
-	if(HearingConfig)
-	{
-		HearingConfig->HearingRange = 3000.0f;
-		HearingConfig->DetectionByAffiliation.bDetectEnemies =
-			HearingConfig->DetectionByAffiliation.bDetectFriendlies =
-			HearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
-
-		GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyAIControllerBase::OnTargetDetected);
-		GetPerceptionComponent()->ConfigureSense(*HearingConfig);
-	}
-}

@@ -38,5 +38,5 @@ private:
 	UFUNCTION()
 		void OnUpdated(TArray<AActor*> const& UpdatedActors);
 
-	void SetupPerceptionSystem();
+	/*void SetupPerceptionSystem();*/
 };
